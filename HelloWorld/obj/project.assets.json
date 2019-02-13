@@ -692,11 +692,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\TUKE\\Ludo\\Ludo.csproj",
-      "projectName": "Ludo",
-      "projectPath": "D:\\GitHub\\TUKE\\Ludo\\Ludo.csproj",
+      "projectUniqueName": "D:\\GitHub\\TUKE\\HelloWorld\\HelloWorld.csproj",
+      "projectName": "HelloWorld",
+      "projectPath": "D:\\GitHub\\TUKE\\HelloWorld\\HelloWorld.csproj",
       "packagesPath": "C:\\Users\\mikro\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\TUKE\\Ludo\\obj\\",
+      "outputPath": "D:\\GitHub\\TUKE\\HelloWorld\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
