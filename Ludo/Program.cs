@@ -6,7 +6,9 @@ namespace Ludo
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Game game = new Game(new DefaultBoard());
+            
+            game.Draw();
         }
     }
 }

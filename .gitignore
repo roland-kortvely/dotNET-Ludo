@@ -38,3 +38,9 @@ sysinfo.txt
 *.unitypackage
 
 \.idea/
+
+HelloWorld/obj/
+
+HelloWorld/bin/
+
+Ludo/bin/
