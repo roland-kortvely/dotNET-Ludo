@@ -1,24 +1,12 @@
-using System.Text;
-
 namespace Ludo
 {
     using static Board.Cell;
 
-    public class DefaultBoard : Board
+    public class AdvancedBoard : Board
     {
         private readonly Cell[,] _map =
         {
-            {S, X, S, X, P, P, P, X, S, X, S},
-            {X, X, X, X, P, H, P, X, X, X, X},
-            {S, X, S, X, P, H, P, X, S, X, S},
-            {X, X, X, X, P, H, P, X, X, X, X},
-            {P, P, P, P, P, H, P, P, P, P, P},
-            {P, H, H, H, H, X, H, H, H, H, P},
-            {P, P, P, P, P, H, P, P, P, P, P},
-            {X, X, X, X, P, H, P, X, X, X, X},
-            {S, X, S, X, P, H, P, X, S, X, S},
-            {X, X, X, X, P, H, P, X, X, X, X},
-            {S, X, S, X, P, P, P, X, S, X, S},
+            {X},
         };
 
         private readonly int[,] _players =
