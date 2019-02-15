@@ -1,22 +1,47 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Ludo
 {
     public abstract class Board : IBoard
     {
+        public abstract int MaxPlayers();
+        public abstract int PlayerFigures();
+
         public abstract Cell[,] Map();
         public abstract int[,] Players();
         public abstract int[,] MapIndex();
 
         public enum Cell
         {
-            X,    //None
-            P,    //Path
-            H,    //Home
-            S,    //Start                   
+            X, //None
+            P, //Path
+            H, //Home
+            S, //Start                   
         }
-        
-        public string Render()
+
+        private Figure FigureByPosition(List<Player> players, int position)
+        {
+            Figure figure = null;
+
+            foreach (var player in players)
+            {
+                foreach (var current in player.Figures)
+                {
+                    if (current.Position != position)
+                    {
+                        continue;
+                    }
+
+                    figure = current;
+                    break;
+                }
+            }
+
+            return figure;
+        }
+
+        public string Render(List<Player> players)
         {
             var builder = new StringBuilder();
 
@@ -25,24 +50,42 @@ namespace Ludo
                 for (var j = 0; j <= Map().GetUpperBound(1); j++)
                 {
                     var type = Map()[i, j];
-                    //var owner = Players()[i, j];
-                    //var index = MapIndex()[i, j];
+                    var owner = Players()[i, j];
+                    var index = MapIndex()[i, j];
+
+                    var cell = ' ';
 
                     switch (type)
                     {
                         case Cell.P:
-                            //Figure figure = this.FindFigure(index);
-                            //builder.Append('[').Append(figure != null ? figure.Sign : ' ').Append(']');
-                            builder.Append('[').Append(' ').Append(']');
+
+                            Figure figure = FigureByPosition(players, index);
+                            if (figure != null)
+                            {
+                                cell = figure.Player.Symbol;
+                            }
+
+                            builder.Append("[" + cell + "]");
                             break;
                         case Cell.S:
-                            //builder.Append(players[owner - 1].PrintStartFigure(index));
-                            builder.Append("(" + ' ' + ")");
+
+                            if (-1 < owner && owner <= players.Count)
+                            {
+                                cell = players[owner - 1].HasFigureAtStart(index) ? players[owner - 1].Symbol : ' ';
+                            }
+
+                            builder.Append("(" + cell + ")");
                             break;
                         case Cell.H:
-                            //builder.Append(players[owner - 1].PrintFinishFigure(index));
-                            builder.Append("   ");
+
+                            if (-1 < owner && owner <= players.Count)
+                            {
+                                cell = players[owner - 1].HasFigureAtHome(index) ? players[owner - 1].Symbol : ' ';
+                            }
+
+                            builder.Append(" " + cell + " ");
                             break;
+                        //case Cell.X:
                         default:
                             builder.Append("   ");
                             break;

@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Ludo
 {
     using static Board.Cell;
@@ -28,12 +26,12 @@ namespace Ludo
             {1, 0, 1, 0, 0, 1, 0, 0, 4, 0, 4},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-            {0, 2, 2, 2, 2, 0, 4, 4, 4, 4, 0},
-            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
-            {2, 0, 2, 0, 0, 3, 0, 0, 3, 0, 3},
-            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
-            {2, 0, 2, 0, 0, 0, 0, 0, 3, 0, 3}
+            {0, 3, 3, 3, 3, 0, 4, 4, 4, 4, 0},
+            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
+            {3, 0, 3, 0, 0, 2, 0, 0, 2, 0, 2},
+            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
+            {3, 0, 3, 0, 0, 0, 0, 0, 2, 0, 2}
         };
 
         private readonly int[,] _mapIndex =
@@ -51,19 +49,13 @@ namespace Ludo
             {0, -1, 1, -1, 18, 19, 20, -1, 1, -1, 0},
         };
 
-        public override Cell[,] Map()
-        {
-            return _map;
-        }
+        public override int MaxPlayers() => 4;
+        public override int PlayerFigures() => 4;
 
-        public override int[,] Players()
-        {
-            return _players;
-        }
+        public override Cell[,] Map() => _map;
 
-        public override int[,] MapIndex()
-        {
-            return _mapIndex;
-        }
+        public override int[,] Players() => _players;
+
+        public override int[,] MapIndex() => _mapIndex;
     }
 }
