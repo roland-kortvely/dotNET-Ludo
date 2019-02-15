@@ -4,7 +4,7 @@ namespace Ludo
 {
     public class Dice
     {
-        private readonly Random _random = new Random();
+        private static Random Random => new Random();
 
         public int Value { get; private set; }
 
@@ -15,9 +15,14 @@ namespace Ludo
 
         public int Roll()
         {
-            var val = _random.Next(6) + 1;
+            var val = Random.Next(6) + 1;
             Value = val;
             return val;
+        }
+
+        public void Set(int value)
+        {
+            Value = value;
         }
     }
 }

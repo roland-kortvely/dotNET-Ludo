@@ -6,9 +6,11 @@ namespace Ludo
 {
     public class Game
     {
-        private readonly IBoard _board;
+        public IBoard Board { get; }
 
-        private List<Player> _players;
+        public List<Player> Players { get; }
+
+        public Player Player => Players[_currentPlayer];
 
         private int _currentPlayer;
 
@@ -16,26 +18,56 @@ namespace Ludo
 
         public Game(IBoard board)
         {
-            _board = board;
+            Board = board;
             _currentPlayer = 0;
 
-            _players = new List<Player>();
+            Players = new List<Player>();
 
             Dice = new Dice();
         }
 
-        private Player CurrentPlayer => _players[_currentPlayer];
+        private Player CurrentPlayer => Players[_currentPlayer];
 
         public bool NewPlayer(string name, char symbol)
         {
-            if (_players.Count + 1 > _board.MaxPlayers())
+            if (Players.Count + 1 > Board.MaxPlayers())
             {
                 return false;
             }
 
-            _players.Add(new Player(name, symbol, _board.PlayerFigures()));
+            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count)));
 
             return true;
+        }
+
+        /**
+         * Used in case of One-to-One game
+         */
+        public bool NewNullPlayer()
+        {
+            return NewPlayer("NULL", ' ');
+        }
+
+        public void NextPlayer()
+        {
+            while (true)
+            {
+                if (_currentPlayer < Players.Count - 1)
+                {
+                    _currentPlayer++;
+                }
+                else
+                {
+                    _currentPlayer = 0;
+                }
+
+                if (Player.IsNull && Players.Count > 1)
+                {
+                    continue;
+                }
+
+                break;
+            }
         }
 
         public void Draw()
@@ -46,7 +78,7 @@ namespace Ludo
 
             builder.Append("Current player: ").AppendLine(CurrentPlayer.Name);
 
-            builder.AppendLine(_board.Render(_players));
+            builder.AppendLine(Board.Render(Players));
 
             Console.WriteLine(builder.ToString());
         }

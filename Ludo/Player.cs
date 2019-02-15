@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Ludo
@@ -12,7 +13,9 @@ namespace Ludo
 
         public List<Figure> Figures { get; }
 
-        public Player(string name, char symbol, int figuresStart)
+        public int StartPosition { get; }
+
+        public Player(string name, char symbol, int figuresStart, int startPosition)
         {
             Symbol = symbol;
 
@@ -22,14 +25,41 @@ namespace Ludo
             _figuresHome = 0;
 
             Figures = new List<Figure>();
-            for (int i = 0; i < figuresStart; i++)
+            for (var i = 0; i < figuresStart; i++)
             {
                 Figures.Add(new Figure(this, -1));
             }
+
+            StartPosition = startPosition;
         }
 
-        public bool HasFigureAtStart(int index) => _figuresStart >= index + 1;
+        public bool HasFigureAtStart(int index = -1) => _figuresStart >= index + 1;
 
-        public bool HasFigureAtHome(int index) => _figuresHome >= index + 1;
+        public bool HasFigureAtHome(int index = -1) => _figuresHome >= index + 1;
+
+        public void PlaceFigure()
+        {
+            if (_figuresStart <= 0)
+            {
+                Console.WriteLine("Can't place new figure..");
+                return;
+            }
+
+            foreach (var figure in Figures)
+            {
+                if (figure.Position != -1)
+                {
+                    continue;
+                }
+
+                figure.PlaceAtStart();
+                _figuresStart--;
+                break;
+            }
+        }
+
+       
+
+        public bool IsNull => Name.Equals("NULL");
     }
 }

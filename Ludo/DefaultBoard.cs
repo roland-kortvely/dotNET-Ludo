@@ -26,12 +26,12 @@ namespace Ludo
             {1, 0, 1, 0, 0, 1, 0, 0, 4, 0, 4},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-            {0, 3, 3, 3, 3, 0, 4, 4, 4, 4, 0},
-            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
-            {3, 0, 3, 0, 0, 2, 0, 0, 2, 0, 2},
-            {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
-            {3, 0, 3, 0, 0, 0, 0, 0, 2, 0, 2}
+            {0, 2, 2, 2, 2, 0, 4, 4, 4, 4, 0},
+            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
+            {2, 0, 2, 0, 0, 3, 0, 0, 3, 0, 3},
+            {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0},
+            {2, 0, 2, 0, 0, 0, 0, 0, 3, 0, 3}
         };
 
         private readonly int[,] _mapIndex =
@@ -51,7 +51,9 @@ namespace Ludo
 
         public override int MaxPlayers() => 4;
         public override int PlayerFigures() => 4;
+        public override int Size() => 40;
 
+        public override int StartPosition(int index) => (Offset * (index + 1)) - 2;
         public override Cell[,] Map() => _map;
 
         public override int[,] Players() => _players;

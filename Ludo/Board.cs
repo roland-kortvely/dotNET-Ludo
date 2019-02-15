@@ -7,6 +7,7 @@ namespace Ludo
     {
         public abstract int MaxPlayers();
         public abstract int PlayerFigures();
+        public abstract int Size();
 
         public abstract Cell[,] Map();
         public abstract int[,] Players();
@@ -20,7 +21,13 @@ namespace Ludo
             S, //Start                   
         }
 
-        private Figure FigureByPosition(List<Player> players, int position)
+        protected int Offset => Size() / MaxPlayers();
+
+        public abstract int StartPosition(int index);
+
+        private int Transform(int position) => position >= Size() ? position - Size() : position;
+
+        private static Figure FigureByPosition(IEnumerable<Player> players, int position)
         {
             Figure figure = null;
 
@@ -39,6 +46,51 @@ namespace Ludo
             }
 
             return figure;
+        }
+
+        private bool CanPlaceFigureAtStart(List<Player> players, Player player)
+        {
+            if (player.IsNull)
+            {
+                return false;
+            }
+
+            var figure = FigureByPosition(players, player.StartPosition);
+            return figure == null || figure.Player != player;
+        }
+
+        public bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player)
+        {
+            if (player.IsNull)
+            {
+                return false;
+            }
+
+            return dice.Value == 6 && player.HasFigureAtHome() && CanPlaceFigureAtStart(players, player);
+        }
+
+        public bool PlayerCanMove(Dice dice, List<Player> players, Player player)
+        {
+            return true;
+        }
+
+        public void MovePlayer(Dice dice, List<Player> players, Player player)
+        {
+            foreach (var figure in player.Figures)
+            {
+                if (figure.Position < 0)
+                {
+                    continue;
+                }
+
+                var position = Transform(figure.Position + dice.Value);
+                var cell = FigureByPosition(players, position);
+                if (cell == null || figure.Player != cell.Player)
+                {
+                    figure.NewPosition(position);
+                    break;
+                }
+            }
         }
 
         public string Render(List<Player> players)
