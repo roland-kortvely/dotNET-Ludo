@@ -72,6 +72,8 @@ namespace Ludo
 
         public void Draw()
         {
+            Console.Clear();
+            
             var builder = new StringBuilder();
 
             builder.Append("Dice: ").AppendLine(Dice.Value.ToString());

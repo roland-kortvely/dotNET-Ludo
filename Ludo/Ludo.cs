@@ -19,37 +19,22 @@ namespace Ludo
             if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
             {
                 game.Player.PlaceFigure();
-            }          
-            game.NextPlayer();
-            
-            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
-            {
-                game.Player.PlaceFigure();
             }
-            game.NextPlayer();
-            
-            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
-            {
-                game.Player.PlaceFigure();
-            }
-            game.NextPlayer();
-            
-            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
-            {
-                game.Player.PlaceFigure();
-            }
+
             game.NextPlayer();
 
+            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
+            {
+                game.Player.PlaceFigure();
+            }
 
-            game.Dice.Roll();
-            
-           // Console.WriteLine("Can move " + game.Player.Name + " " + game.Board.PlayerCanMove(game.Dice, game.Players, game.Player));
-           game.Board.MovePlayer(game.Dice, game.Players, game.Player);
-           game.NextPlayer();
-           game.Board.MovePlayer(game.Dice, game.Players, game.Player);
-          
-            
             game.Draw();
+
+            Input.Listen(new InputController(game));
+
+            while (true)
+            {
+            }
         }
     }
 }
