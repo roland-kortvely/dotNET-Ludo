@@ -16,9 +16,10 @@ namespace Ludo
         public enum Cell
         {
             X, //None
-            P, //Path
+            R, //Road
             H, //Home
-            S, //Start                   
+            S, //Start
+            P, //Protected
         }
 
         protected int Offset => Size() / MaxPlayers();
@@ -110,6 +111,12 @@ namespace Ludo
                     switch (type)
                     {
                         case Cell.P:
+                        case Cell.R:
+
+                            if (type == Cell.P)
+                            {
+                                cell = '*';
+                            }
 
                             Figure figure = FigureByPosition(players, index);
                             if (figure != null)
