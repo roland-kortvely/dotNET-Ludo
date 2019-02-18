@@ -30,6 +30,11 @@ namespace Ludo
 
         public bool NewPlayer(string name, char symbol)
         {
+            if (name == null)
+            {
+                return false;
+            }
+
             if (Players.Count + 1 > Board.MaxPlayers())
             {
                 return false;
@@ -70,10 +75,39 @@ namespace Ludo
             }
         }
 
+        public void Start()
+        {
+            if (Players.Count == 0)
+            {
+                return;
+            }
+
+            if (CurrentPlayer.IsNull)
+            {
+                NextPlayer();
+            }
+
+            Input.Listen(new InputController(this));
+
+            Draw();
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+            }
+        }
+
         public void Draw()
         {
+            if (Players.Count == 0)
+            {
+                return;
+            }
+
             Console.Clear();
-            
+
             var builder = new StringBuilder();
 
             builder.Append("Dice: ").AppendLine(Dice.Value.ToString());

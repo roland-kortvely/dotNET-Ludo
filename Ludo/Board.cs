@@ -30,6 +30,11 @@ namespace Ludo
 
         private static Figure FigureByPosition(IEnumerable<Player> players, int position)
         {
+            if (players == null)
+            {
+                return null;
+            }
+
             Figure figure = null;
 
             foreach (var player in players)
@@ -49,8 +54,13 @@ namespace Ludo
             return figure;
         }
 
-        private bool CanPlaceFigureAtStart(List<Player> players, Player player)
+        private static bool CanPlaceFigureAtStart(IEnumerable<Player> players, Player player)
         {
+            if (players == null)
+            {
+                return false;
+            }
+
             if (player.IsNull)
             {
                 return false;
@@ -75,6 +85,7 @@ namespace Ludo
             return true;
         }
 
+        //TODO:: replace player with figure
         public void MovePlayer(Dice dice, List<Player> players, Player player)
         {
             foreach (var figure in player.Figures)
@@ -86,16 +97,23 @@ namespace Ludo
 
                 var position = Transform(figure.Position + dice.Value);
                 var cell = FigureByPosition(players, position);
-                if (cell == null || figure.Player != cell.Player)
+                if (cell != null && figure.Player == cell.Player)
                 {
-                    figure.NewPosition(position);
-                    break;
+                    continue;
                 }
+
+                figure.NewPosition(position);
+                break;
             }
         }
 
         public string Render(List<Player> players)
         {
+            if (players == null)
+            {
+                return null;
+            }
+
             var builder = new StringBuilder();
 
             for (var i = 0; i <= Map().GetUpperBound(0); i++)
@@ -118,7 +136,7 @@ namespace Ludo
                                 cell = '*';
                             }
 
-                            Figure figure = FigureByPosition(players, index);
+                            var figure = FigureByPosition(players, index);
                             if (figure != null)
                             {
                                 cell = figure.Player.Symbol;
