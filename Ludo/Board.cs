@@ -22,9 +22,31 @@ namespace Ludo
             P, //Protected
         }
 
-        protected int Offset => Size() / MaxPlayers();
+        public int StartPosition(int index)
+        {
+            for (var i = 0; i <= Map().GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= Map().GetUpperBound(1); j++)
+                {
+                    var type = Map()[i, j];
+                    var owner = Players()[i, j];
+                    var mapIndex = MapIndex()[i, j];
 
-        public abstract int StartPosition(int index);
+                    switch (type)
+                    {
+                        case Cell.P:
+                            if (owner == index)
+                            {
+                                return mapIndex;
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            return -1;
+        }
 
         private int Transform(int position) => position >= Size() ? position - Size() : position;
 

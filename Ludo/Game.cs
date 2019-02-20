@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ludo
 {
@@ -40,7 +42,7 @@ namespace Ludo
                 return false;
             }
 
-            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count)));
+            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count + 1)));
 
             return true;
         }
@@ -92,10 +94,11 @@ namespace Ludo
             Draw();
         }
 
-        public void Run()
+        public static void Run()
         {
             while (true)
             {
+                Thread.Sleep(100);
             }
         }
 

@@ -13,12 +13,21 @@ namespace Ludo
             {
                 Console.Write("Player mode (max " + game.Board.MaxPlayers() + "): ");
 
-                players = Convert.ToInt32(Console.ReadLine());
-
-                if (players < 2 || players > game.Board.MaxPlayers())
+                try
                 {
-                    Console.WriteLine("Out of range..");
+                    players = Convert.ToInt32(Console.ReadLine());
+
+                    if (players < 2 || players > game.Board.MaxPlayers())
+                    {
+                        Console.WriteLine("Out of range..");
+                    }
                 }
+                catch (Exception e)
+                {
+//                    Console.WriteLine(e);
+//                    throw;
+                }
+              
             } while (players < 2 || players > game.Board.MaxPlayers());
 
 
@@ -40,30 +49,7 @@ namespace Ludo
             }
             
             game.Start();
-            game.Run();
-
-            /*
-
-            game.Dice.Set(6);
-            
-            game.NextPlayer();
-
-            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
-            {
-                game.Player.PlaceFigure();
-            }
-
-            game.NextPlayer();
-
-            if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
-            {
-                game.Player.PlaceFigure();
-            }
-
-            game.Draw();
-
-            Input.Listen(new InputController(game));
-*/
+            Game.Run();
         }
     }
 }

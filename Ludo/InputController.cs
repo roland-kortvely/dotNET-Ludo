@@ -28,6 +28,13 @@ namespace Ludo
                     Game.Board.MovePlayer(Game.Dice, Game.Players, Game.Player);
                     Game.Draw();
                     break;
+                case ConsoleKey.S:
+                    if (Game.Board.PlayerCanPlaceFigure(Game.Dice, Game.Players, Game.Player))
+                    {
+                        Game.Player.PlaceFigure();
+                    }
+                    Game.Draw();
+                    break;
                 case ConsoleKey.E:
                     Environment.Exit(1);
                     break;
