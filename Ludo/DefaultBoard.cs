@@ -6,17 +6,17 @@ namespace Ludo
     {
         private readonly Cell[,] _map =
         {
-            {S, X, S, X, R, R, P, X, S, X, S},
-            {X, X, X, X, R, H, R, X, X, X, X},
-            {S, X, S, X, R, H, R, X, S, X, S},
-            {X, X, X, X, R, H, R, X, X, X, X},
-            {P, R, R, R, R, H, R, R, R, R, R},
-            {R, H, H, H, H, X, H, H, H, H, R},
-            {R, R, R, R, R, H, R, R, R, R, P},
-            {X, X, X, X, R, H, R, X, X, X, X},
-            {S, X, S, X, R, H, R, X, S, X, S},
-            {X, X, X, X, R, H, R, X, X, X, X},
-            {S, X, S, X, P, R, R, X, S, X, S},
+            {P, _, P, _, R, R, S, _, P, _, P},
+            {_, _, _, _, R, H, R, _, _, _, _},
+            {P, _, P, _, R, H, R, _, P, _, P},
+            {_, _, _, _, R, H, R, _, _, _, _},
+            {S, R, R, R, R, H, R, R, R, R, R},
+            {R, H, H, H, H, _, H, H, H, H, R},
+            {R, R, R, R, R, H, R, R, R, R, S},
+            {_, _, _, _, R, H, R, _, _, _, _},
+            {P, _, P, _, R, H, R, _, P, _, P},
+            {_, _, _, _, R, H, R, _, _, _, _},
+            {P, _, P, _, S, R, R, _, P, _, P},
         };
 
         private readonly int[,] _players =

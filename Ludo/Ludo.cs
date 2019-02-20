@@ -49,7 +49,7 @@ namespace Ludo
             }
             
             game.Start();
-            Game.Run();
+            game.Run();
         }
     }
 }

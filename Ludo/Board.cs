@@ -15,11 +15,11 @@ namespace Ludo
 
         public enum Cell
         {
-            X, //None
+            _, //None
             R, //Road
             H, //Home
+            P, //Player
             S, //Start
-            P, //Protected
         }
 
         public int StartPosition(int index)
@@ -34,7 +34,7 @@ namespace Ludo
 
                     switch (type)
                     {
-                        case Cell.P:
+                        case Cell.S:
                             if (owner == index)
                             {
                                 return mapIndex;
@@ -150,10 +150,10 @@ namespace Ludo
 
                     switch (type)
                     {
-                        case Cell.P:
+                        case Cell.S:
                         case Cell.R:
 
-                            if (type == Cell.P)
+                            if (type == Cell.S)
                             {
                                 cell = '*';
                             }
@@ -166,7 +166,7 @@ namespace Ludo
 
                             builder.Append("[" + cell + "]");
                             break;
-                        case Cell.S:
+                        case Cell.P:
 
                             if (-1 < owner && owner <= players.Count)
                             {

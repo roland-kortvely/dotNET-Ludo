@@ -13,6 +13,8 @@ namespace Ludo
 
         public List<Figure> Figures { get; }
 
+        public Figure Figure(int index) => Figures[index];
+
         public int StartPosition { get; }
 
         public Player(string name, char symbol, int figuresStart, int startPosition)
@@ -59,7 +61,7 @@ namespace Ludo
         }
 
        
-
+        //TODO:: remove
         public bool IsNull => Name.Equals("NULL");
     }
 }

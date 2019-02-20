@@ -49,6 +49,7 @@ namespace Ludo
 
         /**
          * Used in case of One-to-One game
+         * TODO:: remove
          */
         public bool NewNullPlayer()
         {
@@ -94,12 +95,14 @@ namespace Ludo
             Draw();
         }
 
-        public static void Run()
+        public void Run()
         {
             while (true)
             {
                 Thread.Sleep(100);
             }
+
+            Console.ReadKey();
         }
 
         public void Draw()
