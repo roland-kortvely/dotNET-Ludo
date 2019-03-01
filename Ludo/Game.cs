@@ -49,15 +49,6 @@ namespace Ludo
             return true;
         }
 
-        /**
-         * Used in case of One-to-One game
-         * TODO:: remove
-         */
-        public bool NewNullPlayer()
-        {
-            return NewPlayer("NULL", ' ');
-        }
-
         public void NextPlayer()
         {
             while (true)
@@ -69,11 +60,6 @@ namespace Ludo
                 else
                 {
                     _currentPlayer = 0;
-                }
-
-                if (Player.IsNull && Players.Count > 1)
-                {
-                    continue;
                 }
 
                 break;
@@ -89,11 +75,6 @@ namespace Ludo
             if (Players.Count == 0)
             {
                 return;
-            }
-
-            if (CurrentPlayer.IsNull)
-            {
-                NextPlayer();
             }
 
             Input.Listen(new InputController(this));

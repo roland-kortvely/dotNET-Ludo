@@ -31,12 +31,7 @@ namespace Ludo
 
             for (var i = 0; i < players; i++)
             {
-                if (players == 2)
-                {
-                    game.NewNullPlayer();
-                }
-
-                Console.Write("Player " + (i + 1).ToString() + " name: ");
+                Console.Write("Player " + (i + 1) + " name: ");
                 var name = Console.ReadLine();
 
                 Console.Write(name + " symbol: ");
@@ -45,8 +40,7 @@ namespace Ludo
 
                 game.NewPlayer(name, (char) symbol);
             }
-
-            
+           
             game.Start();
             game.Run();
         }

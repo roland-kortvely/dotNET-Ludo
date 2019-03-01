@@ -83,22 +83,12 @@ namespace Ludo
                 return false;
             }
 
-            if (player.IsNull)
-            {
-                return false;
-            }
-
             var figure = FigureByPosition(players, player.StartPosition);
             return figure == null || figure.Player != player;
         }
 
         public bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player)
-        {
-            if (player.IsNull)
-            {
-                return false;
-            }
-
+        {      
             return dice.Value == 6 && player.HasFigureAtHome() && CanPlaceFigureAtStart(players, player);
         }
 

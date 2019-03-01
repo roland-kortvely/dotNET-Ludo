@@ -66,9 +66,5 @@ namespace Ludo
                 break;
             }
         }
-
-       
-        //TODO:: remove
-        public bool IsNull => Name.Equals("NULL");
     }
 }
