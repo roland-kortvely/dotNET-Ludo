@@ -16,7 +16,9 @@ namespace Ludo
 
         private int _currentPlayer;
 
-        public Dice Dice { get; }
+        public Dice Dice { get; private set; }
+
+        public string Status { get; set; }
 
         public Game(IBoard board)
         {
@@ -25,7 +27,7 @@ namespace Ludo
 
             Players = new List<Player>();
 
-            Dice = new Dice();
+           Reset();
         }
 
         private Player CurrentPlayer => Players[_currentPlayer];
@@ -76,10 +78,14 @@ namespace Ludo
 
                 break;
             }
+            
+            Status = "Player " + CurrentPlayer.Name + " turn";    
         }
 
         public void Start()
         {
+            Console.CursorVisible = false;
+            
             if (Players.Count == 0)
             {
                 return;
@@ -92,6 +98,8 @@ namespace Ludo
 
             Input.Listen(new InputController(this));
 
+            Status = "Player " + CurrentPlayer.Name + " turn";            
+
             Draw();
         }
 
@@ -103,6 +111,12 @@ namespace Ludo
             }
 
             Console.ReadKey();
+        }
+
+        public void Reset()
+        {
+            Dice = new Dice();
+            Status = "Game initialized";
         }
 
         public void Draw()
@@ -122,7 +136,11 @@ namespace Ludo
 
             builder.AppendLine(Board.Render(Players));
 
+            builder.Append("Status: ").AppendLine(Status);
+
             Console.WriteLine(builder.ToString());
+
+            Status = "";
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ludo
 {
@@ -13,7 +14,13 @@ namespace Ludo
 
         public List<Figure> Figures { get; }
 
-        public Figure Figure(int index) => Figures[index];
+        public Figure Figure(int index)
+        {
+
+            var x = Figures.OrderBy(figure => figure.Position == -1 ? int.MaxValue : figure.Position).ToList();
+            
+            return x[index - 1];
+        }
 
         public int StartPosition { get; }
 

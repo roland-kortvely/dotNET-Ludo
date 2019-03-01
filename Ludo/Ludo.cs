@@ -24,10 +24,8 @@ namespace Ludo
                 }
                 catch (Exception e)
                 {
-//                    Console.WriteLine(e);
-//                    throw;
+                    game.Status = e.ToString();
                 }
-              
             } while (players < 2 || players > game.Board.MaxPlayers());
 
 
@@ -47,6 +45,7 @@ namespace Ludo
 
                 game.NewPlayer(name, (char) symbol);
             }
+
             
             game.Start();
             game.Run();

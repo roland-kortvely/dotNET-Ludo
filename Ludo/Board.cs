@@ -102,31 +102,36 @@ namespace Ludo
             return dice.Value == 6 && player.HasFigureAtHome() && CanPlaceFigureAtStart(players, player);
         }
 
-        public bool PlayerCanMove(Dice dice, List<Player> players, Player player)
+        public bool PlayerCanMove(Game game, Figure figure)
         {
+            if (figure.Position == -1)
+            {
+                game.Status = "You cannot move with this figure";
+                return false;
+            }
+            
+            var position = Transform(figure.Position + game.Dice.Value);
+            
+            var cell = FigureByPosition(game.Players, position);
+            if (cell != null && figure.Player == cell.Player)
+            {
+                game.Status = "You cannot move with this figure";
+                return false;
+            }
+
             return true;
         }
 
-        //TODO:: replace player with figure
-        public void MovePlayer(Dice dice, List<Player> players, Player player)
+        public void MovePlayer(Game game, Figure figure)
         {
-            foreach (var figure in player.Figures)
+            if (!PlayerCanMove(game, figure))
             {
-                if (figure.Position < 0)
-                {
-                    continue;
-                }
-
-                var position = Transform(figure.Position + dice.Value);
-                var cell = FigureByPosition(players, position);
-                if (cell != null && figure.Player == cell.Player)
-                {
-                    continue;
-                }
-
-                figure.NewPosition(position);
-                break;
+                return;
             }
+            
+            var position = Transform(figure.Position + game.Dice.Value);
+         
+            figure.NewPosition(position);         
         }
 
         public string Render(List<Player> players)

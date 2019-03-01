@@ -7,9 +7,9 @@ namespace Ludo
         string Render(List<Player> players);
 
         bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player);
-        bool PlayerCanMove(Dice dice, List<Player> players, Player player);
+        bool PlayerCanMove(Game game, Figure figure);
 
-        void MovePlayer(Dice dice, List<Player> players, Player player);
+        void MovePlayer(Game game, Figure figure);
 
         int MaxPlayers();
         int PlayerFigures();
