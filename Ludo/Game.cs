@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ludo
 {
@@ -18,7 +17,7 @@ namespace Ludo
 
         public Dice Dice { get; private set; }
 
-        public string Status { get; set; }
+        public string Status { private get; set; }
 
         public Game(IBoard board)
         {
@@ -27,10 +26,10 @@ namespace Ludo
 
             Players = new List<Player>();
 
-           Reset();
+            Reset();
         }
 
-        private Player CurrentPlayer => Players[_currentPlayer];
+        public Player CurrentPlayer => Players[_currentPlayer];
 
         public bool NewPlayer(string name, char symbol)
         {
@@ -44,7 +43,8 @@ namespace Ludo
                 return false;
             }
 
-            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count + 1)));
+            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count + 1),
+                Board.FinalPosition(Players.Count + 1)));
 
             return true;
         }
@@ -64,14 +64,14 @@ namespace Ludo
 
                 break;
             }
-            
-            Status = "Player " + CurrentPlayer.Name + " turn";    
+
+            Status = "Player " + CurrentPlayer.Name + " turn";
         }
 
         public void Start()
         {
             Console.CursorVisible = false;
-            
+
             if (Players.Count == 0)
             {
                 return;
@@ -79,7 +79,7 @@ namespace Ludo
 
             Input.Listen(new InputController(this));
 
-            Status = "Player " + CurrentPlayer.Name + " turn";            
+            Status = "Player " + CurrentPlayer.Name + " turn";
 
             Draw();
         }

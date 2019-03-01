@@ -9,15 +9,11 @@ namespace Ludo
         bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player);
         bool PlayerCanMove(Game game, Figure figure);
 
-        void MovePlayer(Game game, Figure figure);
+        bool MovePlayer(Game game, int figureIndex);
 
         int MaxPlayers();
         int PlayerFigures();
         int StartPosition(int index);
-
-        int Size();
-        Board.Cell[,] Map();
-        int[,] Players();
-        int[,] MapIndex();
+        int FinalPosition(int index);
     }
 }

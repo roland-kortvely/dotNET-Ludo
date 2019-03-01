@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,11 +8,11 @@ namespace Ludo
     {
         public abstract int MaxPlayers();
         public abstract int PlayerFigures();
-        public abstract int Size();
 
-        public abstract Cell[,] Map();
-        public abstract int[,] Players();
-        public abstract int[,] MapIndex();
+        protected abstract int Size();
+        protected abstract Cell[,] Map();
+        protected abstract int[,] Players();
+        protected abstract int[,] MapIndex();
 
         public enum Cell
         {
@@ -20,6 +21,7 @@ namespace Ludo
             H, //Home
             P, //Player
             S, //Start
+            F
         }
 
         public int StartPosition(int index)
@@ -48,7 +50,36 @@ namespace Ludo
             return -1;
         }
 
-        private int Transform(int position) => position >= Size() ? position - Size() : position;
+        public int FinalPosition(int index)
+        {
+            for (var i = 0; i <= Map().GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= Map().GetUpperBound(1); j++)
+                {
+                    var type = Map()[i, j];
+                    var owner = Players()[i, j];
+                    var mapIndex = MapIndex()[i, j];
+
+                    switch (type)
+                    {
+                        case Cell.F:
+                            if (owner == index)
+                            {
+                                return mapIndex;
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        private int Transform(int position)
+        {
+            return position >= Size() ? position - Size() : position;
+        }
 
         private static Figure FigureByPosition(IEnumerable<Player> players, int position)
         {
@@ -68,7 +99,13 @@ namespace Ludo
                         continue;
                     }
 
+                    if (current.State != Figure.States.Playing)
+                    {
+                        continue;
+                    }
+
                     figure = current;
+
                     break;
                 }
             }
@@ -88,20 +125,35 @@ namespace Ludo
         }
 
         public bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player)
-        {      
-            return dice.Value == 6 && player.HasFigureAtHome() && CanPlaceFigureAtStart(players, player);
+        {
+            return dice.Value == 6 && player.HasFigureAtStart() && CanPlaceFigureAtStart(players, player);
         }
 
         public bool PlayerCanMove(Game game, Figure figure)
         {
-            if (figure.Position == -1)
+            if (figure == null)
+            {
+                return false;
+            }
+
+            if (figure.State == Figure.States.Start)
             {
                 game.Status = "You cannot move with this figure";
                 return false;
             }
-            
+
             var position = Transform(figure.Position + game.Dice.Value);
-            
+
+            if (figure.Position <= figure.Player.FinalPosition)
+            {
+                if (position > figure.Player.FinalPosition)
+                {
+                    var diff = figure.Player.FinalPosition - position;
+
+                    position = Math.Abs(diff) - 1;
+                }
+            }
+
             var cell = FigureByPosition(game.Players, position);
             if (cell != null && figure.Player == cell.Player)
             {
@@ -109,19 +161,50 @@ namespace Ludo
                 return false;
             }
 
+            if (cell != null)
+            {
+                game.Status = game.CurrentPlayer.Name + " kicked " + cell.Player.Name + " figure";
+                cell.Kick();
+            }
+
             return true;
         }
 
-        public void MovePlayer(Game game, Figure figure)
+        public bool MovePlayer(Game game, int figureIndex)
         {
+            var figure = game.CurrentPlayer.FigureByPosition(figureIndex, Size());
+
+            if (figure == null)
+            {
+                return false;
+            }
+
             if (!PlayerCanMove(game, figure))
             {
-                return;
+                return false;
             }
-            
+
             var position = Transform(figure.Position + game.Dice.Value);
-         
-            figure.NewPosition(position);         
+
+            if (figure.Position <= figure.Player.FinalPosition)
+            {
+                if (position > figure.Player.FinalPosition)
+                {
+                    var diff = figure.Player.FinalPosition - position;
+
+                    position = Math.Abs(diff) - 1;
+
+                    figure.Home();
+                    game.Status = figure.Player.Name + " moved figure to home {position: " + position + "|diff:" +
+                                  diff + "}";
+
+                    figure.NewPosition(position);
+                    return true;
+                }
+            }
+
+            figure.NewPosition(position);
+            return true;
         }
 
         public string Render(List<Player> players)
@@ -147,6 +230,7 @@ namespace Ludo
                     {
                         case Cell.S:
                         case Cell.R:
+                        case Cell.F:
 
                             if (type == Cell.S)
                             {
@@ -156,7 +240,11 @@ namespace Ludo
                             var figure = FigureByPosition(players, index);
                             if (figure != null)
                             {
-                                cell = figure.Player.Symbol;
+                                if (figure.State == Figure.States.Playing)
+                                {
+                                    cell = (char) (figure.Index + 48);
+                                    cell = figure.Player.Symbol;
+                                }
                             }
 
                             builder.Append("[" + cell + "]");
@@ -172,14 +260,15 @@ namespace Ludo
                             break;
                         case Cell.H:
 
+                            cell = '#';
+
                             if (-1 < owner && owner <= players.Count)
                             {
-                                cell = players[owner - 1].HasFigureAtHome(index) ? players[owner - 1].Symbol : ' ';
+                                cell = players[owner - 1].HasFigureAtHome(index) ? players[owner - 1].Symbol : '#';
                             }
 
                             builder.Append(" " + cell + " ");
                             break;
-                        //case Cell.X:
                         default:
                             builder.Append("   ");
                             break;

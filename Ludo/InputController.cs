@@ -26,19 +26,19 @@ namespace Ludo
                     Game.Draw();
                     break;
                 case ConsoleKey.D1:
-                    Game.Board.MovePlayer(Game, Game.Player.Figure(1));
+                    Game.Board.MovePlayer(Game, 1);
                     Game.Draw();
                     break;
                 case ConsoleKey.D2:
-                    Game.Board.MovePlayer(Game, Game.Player.Figure(2));
+                    Game.Board.MovePlayer(Game, 2);
                     Game.Draw();
                     break;
                 case ConsoleKey.D3:
-                    Game.Board.MovePlayer(Game, Game.Player.Figure(3));
+                    Game.Board.MovePlayer(Game, 3);
                     Game.Draw();
                     break;
                 case ConsoleKey.D4:
-                    Game.Board.MovePlayer(Game, Game.Player.Figure(4));
+                    Game.Board.MovePlayer(Game, 4);
                     Game.Draw();
                     break;
                 case ConsoleKey.S:

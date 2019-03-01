@@ -6,32 +6,32 @@ namespace Ludo
     {
         private readonly Cell[,] _map =
         {
-            {P, _, P, _, R, R, S, _, P, _, P},
+            {P, _, P, _, R, F, S, _, P, _, P},
             {_, _, _, _, R, H, R, _, _, _, _},
             {P, _, P, _, R, H, R, _, P, _, P},
             {_, _, _, _, R, H, R, _, _, _, _},
             {S, R, R, R, R, H, R, R, R, R, R},
-            {R, H, H, H, H, _, H, H, H, H, R},
+            {F, H, H, H, H, _, H, H, H, H, F},
             {R, R, R, R, R, H, R, R, R, R, S},
             {_, _, _, _, R, H, R, _, _, _, _},
             {P, _, P, _, R, H, R, _, P, _, P},
             {_, _, _, _, R, H, R, _, _, _, _},
-            {P, _, P, _, S, R, R, _, P, _, P},
+            {P, _, P, _, S, F, R, _, P, _, P},
         };
 
         private readonly int[,] _players =
         {
-            {3, 0, 3, 0, 0, 0, 2, 0, 2, 0, 2},
+            {3, 0, 3, 0, 0, 2, 2, 0, 2, 0, 2},
             {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
             {3, 0, 3, 0, 0, 2, 0, 0, 2, 0, 2},
             {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
             {3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
-            {0, 3, 3, 3, 3, 0, 4, 4, 4, 4, 0},
+            {3, 3, 3, 3, 3, 0, 4, 4, 4, 4, 4},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
             {1, 0, 1, 0, 0, 1, 0, 0, 4, 0, 4},
             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-            {1, 0, 1, 0, 1, 0, 0, 0, 4, 0, 4}
+            {1, 0, 1, 0, 1, 1, 0, 0, 4, 0, 4}
         };
 
         private readonly int[,] _mapIndex =
@@ -51,10 +51,10 @@ namespace Ludo
 
         public override int MaxPlayers() => 4;
         public override int PlayerFigures() => 4;
-        public override int Size() => 40;
-
-        public override Cell[,] Map() => _map;
-        public override int[,] Players() => _players;
-        public override int[,] MapIndex() => _mapIndex;
+        
+        protected override int Size() => 40;
+        protected override Cell[,] Map() => _map;
+        protected override int[,] Players() => _players;
+        protected override int[,] MapIndex() => _mapIndex;
     }
 }
