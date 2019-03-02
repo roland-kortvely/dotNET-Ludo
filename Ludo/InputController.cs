@@ -32,6 +32,15 @@ namespace Ludo
             var status = false;
             while (true)
             {
+                if (!game.CurrentPlayer.MovePossible(game))
+                {
+                    game.Status = "No move possible";
+                    game.Draw();
+
+                    Read();
+                    break;
+                }
+                
                 if (status)
                 {
                     break;
@@ -56,9 +65,9 @@ namespace Ludo
                         game.Draw();
                         continue;
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
+                        if (game.Board.PlayerCanPlaceFigure(game, game.CurrentPlayer))
                         {
-                            status = game.Player.PlaceFigure();
+                            status = game.CurrentPlayer.PlaceFigure();
                         }
                         else
                         {
@@ -78,12 +87,19 @@ namespace Ludo
         {
             while (true)
             {
+                if (!game.CurrentPlayer.MovePossible(game))
+                {
+                    game.Status = "No move possible";
+                    game.Draw();
+                    break;
+                }
+                
                 switch (Read())
                 {                  
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
+                        if (game.Board.PlayerCanPlaceFigure(game, game.CurrentPlayer))
                         {
-                            game.Player.PlaceFigure();
+                            game.CurrentPlayer.PlaceFigure();
                         }
                         else
                         {

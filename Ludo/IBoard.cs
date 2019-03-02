@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 
 namespace Ludo
 {
     public interface IBoard
     {
-        string Render(List<Player> players);
+        string Render(Game game);
 
-        bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player);
+        bool PlayerCanPlaceFigure(Game game, Player player);
         bool PlayerCanMove(Game game, Figure figure);
 
         bool MovePlayer(Game game, int figureIndex);
@@ -15,5 +16,6 @@ namespace Ludo
         int PlayerFigures();
         int StartPosition(int index);
         int FinalPosition(int index);
+        ConsoleColor Colors(int index);
     }
 }

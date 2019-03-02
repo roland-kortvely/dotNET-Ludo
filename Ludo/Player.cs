@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,11 +11,12 @@ namespace Ludo
 
         public string Name { get; }
         public char Symbol { get; }
-
         public List<Figure> Figures { get; }
-        
-        public bool FirstMove { get; private set; }
+
+        private bool FirstMove { get; set; }
         public bool ExtraMove { get; private set; }
+
+        public int Index { get; set; }
 
         public Figure FigureByPosition(int index, int mapSize)
         {
@@ -34,18 +36,18 @@ namespace Ludo
                 {
                     return fig1 + mapSize;
                 }
-                
+
                 return fig1 >= figure1.Player.StartPosition
                     ? fig1 - figure1.Player.StartPosition
                     : fig1 + (mapSize - figure1.Player.StartPosition);
             }).ToList();
-        
+
 
             //DEBUG indexing on board
             for (var i = 0; i < x.Count; i++)
             {
                 x[i].Index = i + 1;
-            }   
+            }
 
             return x.Count >= index ? x[index - 1] : null;
         }
@@ -53,8 +55,10 @@ namespace Ludo
         public int StartPosition { get; }
         public int FinalPosition { get; }
 
-        public Player(string name, char symbol, int figuresStart, int startPosition, int finalPosition)
+        public Player(int index, string name, char symbol, int figuresStart, int startPosition,
+            int finalPosition)
         {
+            Index = index;
             Symbol = symbol;
 
             Name = name;
@@ -126,15 +130,45 @@ namespace Ludo
         {
             FiguresHome++;
         }
-        
+
+        public bool MovePossible(Game game)
+        {
+            foreach (var figure in Figures)
+            {
+                switch (figure.State)
+                {
+                    case Figure.States.Start:
+                        if (game.Board.PlayerCanPlaceFigure(game, this))
+                        {
+                            return true;
+                        }
+
+                        break;
+                    case Figure.States.Home:
+                    case Figure.States.Playing:
+
+                        if (game.Board.PlayerCanMove(game, figure))
+                        {
+                            return true;
+                        }
+
+                        break;
+                    default:
+                        continue;
+                }
+            }
+
+            return false;
+        }
+
         public void Turn(Game game)
         {
             ExtraMove = false;
-            
+
             if (!FirstMove)
             {
                 game.Status = "Roll the dice";
-                game.Draw();          
+                game.Draw();
                 InputController.Roll(game);
 
                 if (game.Dice.Value == 6)
@@ -145,19 +179,19 @@ namespace Ludo
             else
             {
                 FirstMove = false;
-                
+
                 game.Dice.Set(6);
                 game.Status = "Place your first figure";
                 game.Draw();
                 InputController.PlaceFigure(game);
-                
+
                 game.Status = "Roll the dice";
-                game.Draw();           
+                game.Draw();
                 InputController.Roll(game);
             }
-            
+
             game.Status = "Move with figure";
-            game.Draw();           
+            game.Draw();
             InputController.MovePlayer(game);
         }
     }

@@ -11,8 +11,9 @@ namespace Ludo
 
         protected abstract int Size();
         protected abstract Cell[,] Map();
-        protected abstract int[,] Players();
+        protected abstract int[,] Owners();
         protected abstract int[,] MapIndex();
+        public abstract ConsoleColor Colors(int index);
 
         public enum Cell
         {
@@ -21,7 +22,40 @@ namespace Ludo
             H, //Home
             P, //Player
             S, //Start
-            F
+            F  //Final cell to home
+        }
+
+        private int Transform(int position)
+        {
+            return position >= Size() ? position - Size() : position;
+        }
+
+        private Cell CellTypeByPosition(int position)
+        {
+            for (var i = 0; i <= Map().GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= Map().GetUpperBound(1); j++)
+                {
+                    var type = Map()[i, j];
+                    var mapIndex = MapIndex()[i, j];
+
+                    switch (type)
+                    {
+                        case Cell.S:
+                        case Cell.R:
+                        case Cell.F:
+                            
+                            if (mapIndex == position)
+                            {
+                                return type;
+                            }
+
+                            break;
+                    }
+                }
+            }
+
+            return Cell._;
         }
 
         public int StartPosition(int index)
@@ -31,7 +65,7 @@ namespace Ludo
                 for (var j = 0; j <= Map().GetUpperBound(1); j++)
                 {
                     var type = Map()[i, j];
-                    var owner = Players()[i, j];
+                    var owner = Owners()[i, j];
                     var mapIndex = MapIndex()[i, j];
 
                     switch (type)
@@ -57,7 +91,7 @@ namespace Ludo
                 for (var j = 0; j <= Map().GetUpperBound(1); j++)
                 {
                     var type = Map()[i, j];
-                    var owner = Players()[i, j];
+                    var owner = Owners()[i, j];
                     var mapIndex = MapIndex()[i, j];
 
                     switch (type)
@@ -74,11 +108,6 @@ namespace Ludo
             }
 
             return -1;
-        }
-
-        private int Transform(int position)
-        {
-            return position >= Size() ? position - Size() : position;
         }
 
         private static Figure FigureByPosition(IEnumerable<Player> players, int position)
@@ -124,9 +153,9 @@ namespace Ludo
             return figure == null || figure.Player != player;
         }
 
-        public bool PlayerCanPlaceFigure(Dice dice, List<Player> players, Player player)
+        public bool PlayerCanPlaceFigure(Game game, Player player)
         {
-            return dice.Value == 6 && player.HasFigureAtStart() && CanPlaceFigureAtStart(players, player);
+            return game.Dice.Value == 6 && player.HasFigureAtStart() && CanPlaceFigureAtStart(game.Players, player);
         }
 
         public bool PlayerCanMove(Game game, Figure figure)
@@ -138,7 +167,6 @@ namespace Ludo
 
             if (figure.State == Figure.States.Start)
             {
-                game.Status = "You cannot move with this figure";
                 return false;
             }
 
@@ -152,25 +180,25 @@ namespace Ludo
 
                     position = Math.Abs(diff) - 1;
 
-                    if (figure.Player.HasFigureAtHome(position))
+                    if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1)
                     {
-                        //game.Status = "You cannot move with this figure";
-                        //return false;
+                        return false;
                     }
+                }
+            }
+
+            if (figure.State == Figure.States.Home)
+            {
+                if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1)
+                {
+                    return false;
                 }
             }
 
             var cell = FigureByPosition(game.Players, position);
             if (cell != null && figure.Player == cell.Player)
             {
-                game.Status = "You cannot move with this figure";
                 return false;
-            }
-
-            if (cell != null)
-            {
-                game.Status = game.CurrentPlayer.Name + " kicked " + cell.Player.Name + " figure";
-                cell.Kick();
             }
 
             return true;
@@ -187,6 +215,7 @@ namespace Ludo
 
             if (!PlayerCanMove(game, figure))
             {
+                game.Status = "You cannot move with this figure";
                 return false;
             }
 
@@ -208,13 +237,23 @@ namespace Ludo
                 }
             }
 
+            var cell = FigureByPosition(game.Players, position);
+            if (cell != null && figure.State == Figure.States.Playing)
+            {
+                if (CellTypeByPosition(position) != Cell.S)
+                {
+                    game.Status = game.CurrentPlayer.Name + " kicked " + cell.Player.Name + " figure";
+                    cell.Kick();
+                }
+            }
+
             figure.NewPosition(position);
             return true;
         }
 
-        public string Render(List<Player> players)
+        public string Render(Game game)
         {
-            if (players == null)
+            if (game.Players == null)
             {
                 return "";
             }
@@ -226,7 +265,7 @@ namespace Ludo
                 for (var j = 0; j <= Map().GetUpperBound(1); j++)
                 {
                     var type = Map()[i, j];
-                    var owner = Players()[i, j];
+                    var owner = Owners()[i, j];
                     var index = MapIndex()[i, j];
 
                     var cell = ' ';
@@ -237,52 +276,75 @@ namespace Ludo
                         case Cell.R:
                         case Cell.F:
 
+                            Console.Write("[");
+
                             if (type == Cell.S)
                             {
+                                Console.ForegroundColor = Colors(owner - 1);
+
                                 cell = '*';
                             }
 
-                            var figure = FigureByPosition(players, index);
+                            var figure = FigureByPosition(game.Players, index);
                             if (figure != null)
                             {
                                 if (figure.State == Figure.States.Playing)
                                 {
-                                    cell = (char) (figure.Index + 48);
+                                    //cell = (char) (figure.Index + 48);
                                     cell = figure.Player.Symbol;
+
+                                    Console.ForegroundColor = Colors(figure.Player.Index);
                                 }
                             }
 
                             builder.Append("[" + cell + "]");
-                            Console.Write("[" + cell + "]");
+                            Console.Write(cell);
+
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.Write("]");
                             break;
                         case Cell.P:
+                            Console.Write("(");
 
-                            if (-1 < owner && owner <= players.Count)
+                            Console.ForegroundColor = Colors(owner - 1);
+
+                            if (-1 < owner && owner <= game.Players.Count)
                             {
-                                cell = players[owner - 1].HasFigureAtStart(index) ? players[owner - 1].Symbol : ' ';
+                                cell = game.Players[owner - 1].HasFigureAtStart(index)
+                                    ? game.Players[owner - 1].Symbol
+                                    : ' ';
                             }
 
                             builder.Append("(" + cell + ")");
-                            Console.Write("(" + cell + ")");
+                            Console.Write(cell);
+
+                            Console.ForegroundColor = ConsoleColor.Black;
+
+                            Console.Write(")");
                             break;
                         case Cell.H:
 
-                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.ForegroundColor = Colors(owner - 1);
+
                             cell = '#';
 
-                            if (-1 < owner && owner <= players.Count)
+                            if (-1 < owner && owner <= game.Players.Count)
                             {
-                                cell = players[owner - 1].HasFigureAtHome(index) ? players[owner - 1].Symbol : '#';
+                                cell = game.Players[owner - 1].HasFigureAtHome(index)
+                                    ? game.Players[owner - 1].Symbol
+                                    : '#';
                             }
 
                             builder.Append(" " + cell + " ");
                             Console.Write(" " + cell + " ");
-                            Console.ForegroundColor = ConsoleColor.Black;
 
+                            Console.ForegroundColor = ConsoleColor.Black;
                             break;
                         default:
                             builder.Append("   ");
                             Console.Write("   ");
+
+                            Console.ForegroundColor = ConsoleColor.Black;
                             break;
                     }
                 }

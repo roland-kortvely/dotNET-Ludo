@@ -1,3 +1,5 @@
+using System;
+
 namespace Ludo
 {
     using static Board.Cell;
@@ -19,7 +21,7 @@ namespace Ludo
             {P, _, P, _, S, F, R, _, P, _, P},
         };
 
-        private readonly int[,] _players =
+        private readonly int[,] _owners =
         {
             {3, 0, 3, 0, 0, 2, 2, 0, 2, 0, 2},
             {0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0},
@@ -49,12 +51,24 @@ namespace Ludo
             { 0,  0,  1,  0, 30, 29, 28,  0,  1,  0,  0},
         };
 
+        private readonly ConsoleColor[] _consoleColors =
+        {
+            ConsoleColor.Blue,
+            ConsoleColor.Magenta,
+            ConsoleColor.Red,
+            ConsoleColor.Green
+        };
+
         public override int MaxPlayers() => 4;
         public override int PlayerFigures() => 4;
-        
+        public override ConsoleColor Colors(int index)
+        {
+            return _consoleColors[index];
+        }
+
         protected override int Size() => 40;
         protected override Cell[,] Map() => _map;
-        protected override int[,] Players() => _players;
-        protected override int[,] MapIndex() => _mapIndex;
+        protected override int[,] Owners() => _owners;
+        protected override int[,] MapIndex() => _mapIndex;      
     }
 }

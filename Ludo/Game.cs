@@ -1,37 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 
 namespace Ludo
 {
     public class Game
     {
         public IBoard Board { get; }
+        private IGameMode GameMode { get; }
 
         public List<Player> Players { get; }
 
-        public Player Player => Players[_currentPlayer];
+        public Player CurrentPlayer => Players[_currentPlayer];
 
         private int _currentPlayer;
 
         public Dice Dice { get; private set; }
 
         public string Status { private get; set; }
+        public string Mode { private get; set; }
 
-        public Game(IBoard board)
+        public Game(IBoard board, IGameMode gameMode)
         {
             Board = board;
+            GameMode = gameMode;
+
             _currentPlayer = 0;
 
             Players = new List<Player>();
 
             Reset();
+            Start();
+            Loop();
         }
 
-        public Player CurrentPlayer => Players[_currentPlayer];
-
-        public bool NewPlayer(string name, char symbol)
+        private bool NewPlayer(string name, char symbol)
         {
             if (name == null)
             {
@@ -43,7 +46,8 @@ namespace Ludo
                 return false;
             }
 
-            Players.Add(new Player(name, symbol, Board.PlayerFigures(), Board.StartPosition(Players.Count + 1),
+            Players.Add(new Player(Players.Count, name, symbol, Board.PlayerFigures(),
+                Board.StartPosition(Players.Count + 1),
                 Board.FinalPosition(Players.Count + 1)));
 
             return true;
@@ -70,37 +74,68 @@ namespace Ludo
 
         public void Start()
         {
+            var players = 0;
+
+            do
+            {
+                Console.Write("Player mode (max " + Board.MaxPlayers() + "): ");
+
+                try
+                {
+                    players = Convert.ToInt32(Console.ReadLine());
+
+                    if (players < 2 || players > Board.MaxPlayers())
+                    {
+                        Console.WriteLine("Out of range..");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Status = e.ToString();
+                }
+            } while (players < 2 || players > Board.MaxPlayers());
+
+
+            for (var i = 0; i < players; i++)
+            {
+                Console.Write("Player " + (i + 1) + " name: ");
+                var name = Console.ReadLine();
+
+                Console.Write(name + " symbol: ");
+                var symbol = Console.Read();
+                Console.ReadLine();
+
+                NewPlayer(name, (char) symbol);
+            }
+
             Console.CursorVisible = false;
 
             if (Players.Count == 0)
             {
                 return;
             }
+
+            GameMode.Start(this);
         }
 
-        public void Run()
+        public void Loop()
         {
             while (!IsGameOver())
             {
-                CurrentPlayer.Turn(this);
-                
-                if (!CurrentPlayer.ExtraMove)
-                {
-                    NextPlayer();
-                }
+                GameMode.Loop(this);
             }
 
             Console.CursorVisible = true;
             Console.ReadKey();
         }
 
-        public void Reset()
+        private void Reset()
         {
             Dice = new Dice();
             Status = "Game initialized";
         }
 
-        public bool IsGameOver()
+        private bool IsGameOver()
         {
             return false;
         }
@@ -116,23 +151,18 @@ namespace Ludo
 
             var builder = new StringBuilder();
 
-            builder.Append("Dice: ").AppendLine(Dice.Value.ToString());
+            builder.Append("Ludo by Roland Körtvely ").AppendLine(Mode);
 
-            builder.Append("Current player: ").AppendLine(CurrentPlayer.Name);
+            builder.AppendLine("----------------------------");
+
+            builder.Append("Dice: ").Append(Dice.Value.ToString()).Append(" <-> Current player: ").AppendLine(CurrentPlayer.Name);
+
+            builder.AppendLine("Status: " + Status);
 
             Console.WriteLine(builder.ToString());
 
-            //builder.AppendLine(Board.Render(Players));
-
-            //builder.Append("Status: ").AppendLine(Status);
-
-            Board.Render(Players);
-
-
-            Console.WriteLine();
-            Console.WriteLine("Status: " + Status);
-
-//            Status = "";
+            //builder.AppendLine(Board.Render(this));
+            Board.Render(this);
         }
     }
 }
