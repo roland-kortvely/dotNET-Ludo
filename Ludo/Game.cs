@@ -76,21 +76,21 @@ namespace Ludo
             {
                 return;
             }
-
-            Input.Listen(new InputController(this));
-
-            Status = "Player " + CurrentPlayer.Name + " turn";
-
-            Draw();
         }
 
         public void Run()
         {
-            while (true)
+            while (!IsGameOver())
             {
-                Thread.Sleep(100);
+                CurrentPlayer.Turn(this);
+                
+                if (!CurrentPlayer.ExtraMove)
+                {
+                    NextPlayer();
+                }
             }
 
+            Console.CursorVisible = true;
             Console.ReadKey();
         }
 
@@ -98,6 +98,11 @@ namespace Ludo
         {
             Dice = new Dice();
             Status = "Game initialized";
+        }
+
+        public bool IsGameOver()
+        {
+            return false;
         }
 
         public void Draw()
@@ -115,13 +120,19 @@ namespace Ludo
 
             builder.Append("Current player: ").AppendLine(CurrentPlayer.Name);
 
-            builder.AppendLine(Board.Render(Players));
-
-            builder.Append("Status: ").AppendLine(Status);
-
             Console.WriteLine(builder.ToString());
 
-            Status = "";
+            //builder.AppendLine(Board.Render(Players));
+
+            //builder.Append("Status: ").AppendLine(Status);
+
+            Board.Render(Players);
+
+
+            Console.WriteLine();
+            Console.WriteLine("Status: " + Status);
+
+//            Status = "";
         }
     }
 }

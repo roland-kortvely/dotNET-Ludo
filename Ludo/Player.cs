@@ -12,6 +12,9 @@ namespace Ludo
         public char Symbol { get; }
 
         public List<Figure> Figures { get; }
+        
+        public bool FirstMove { get; private set; }
+        public bool ExtraMove { get; private set; }
 
         public Figure FigureByPosition(int index, int mapSize)
         {
@@ -67,6 +70,9 @@ namespace Ludo
 
             StartPosition = startPosition;
             FinalPosition = finalPosition;
+
+            FirstMove = true;
+            ExtraMove = false;
         }
 
         public bool HasFigureAtStart(int index = -1) => FiguresStart >= index + 1;
@@ -89,11 +95,11 @@ namespace Ludo
             return false;
         }
 
-        public void PlaceFigure()
+        public bool PlaceFigure()
         {
             if (FiguresStart <= 0)
             {
-                return;
+                return false;
             }
 
             foreach (var figure in Figures)
@@ -105,8 +111,10 @@ namespace Ludo
 
                 figure.PlaceAtStart();
                 FiguresStart--;
-                break;
+                return true;
             }
+
+            return false;
         }
 
         public void KickTrigger()
@@ -117,6 +125,40 @@ namespace Ludo
         public void HomeTrigger()
         {
             FiguresHome++;
+        }
+        
+        public void Turn(Game game)
+        {
+            ExtraMove = false;
+            
+            if (!FirstMove)
+            {
+                game.Status = "Roll the dice";
+                game.Draw();          
+                InputController.Roll(game);
+
+                if (game.Dice.Value == 6)
+                {
+                    ExtraMove = true;
+                }
+            }
+            else
+            {
+                FirstMove = false;
+                
+                game.Dice.Set(6);
+                game.Status = "Place your first figure";
+                game.Draw();
+                InputController.PlaceFigure(game);
+                
+                game.Status = "Roll the dice";
+                game.Draw();           
+                InputController.Roll(game);
+            }
+            
+            game.Status = "Move with figure";
+            game.Draw();           
+            InputController.MovePlayer(game);
         }
     }
 }

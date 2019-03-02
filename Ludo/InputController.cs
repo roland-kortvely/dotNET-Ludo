@@ -1,60 +1,103 @@
 using System;
-using System.Collections.ObjectModel;
 
 namespace Ludo
 {
-    public class InputController
+    public static class InputController
     {
-        private Game Game { get; }
-
-        public InputController(Game game)
+        private static ConsoleKey Read()
         {
-            Game = game;
+            var key = Console.ReadKey(true).Key;
+
+            if (key == ConsoleKey.E)
+            {
+                Environment.Exit(1);
+            }
+
+            return key;
         }
 
-        public void ReadKey(ConsoleKey key)
+        public static void Roll(Game game)
         {
-            switch (key)
+            while (Read() != ConsoleKey.Spacebar)
             {
-                case ConsoleKey.Spacebar:
-                    Game.Dice.Roll();
-                    Game.Status = "You rolled " + Game.Dice.Value;
-                    Game.Draw();
+            }
+
+            game.Dice.Roll();
+            game.Status = "You rolled " + game.Dice.Value;
+            game.Draw();
+        }
+
+        public static void MovePlayer(Game game)
+        {
+            var status = false;
+            while (true)
+            {
+                if (status)
+                {
                     break;
-                case ConsoleKey.N:
-                    Game.NextPlayer();
-                    Game.Draw();
-                    break;
-                case ConsoleKey.D1:
-                    Game.Board.MovePlayer(Game, 1);
-                    Game.Draw();
-                    break;
-                case ConsoleKey.D2:
-                    Game.Board.MovePlayer(Game, 2);
-                    Game.Draw();
-                    break;
-                case ConsoleKey.D3:
-                    Game.Board.MovePlayer(Game, 3);
-                    Game.Draw();
-                    break;
-                case ConsoleKey.D4:
-                    Game.Board.MovePlayer(Game, 4);
-                    Game.Draw();
-                    break;
-                case ConsoleKey.S:
-                    if (Game.Board.PlayerCanPlaceFigure(Game.Dice, Game.Players, Game.Player))
-                    {
-                        Game.Player.PlaceFigure();
-                    }
-                    else
-                    {
-                        Game.Status = "You can't start with a new figure";
-                    }
-                    Game.Draw();
-                    break;
-                case ConsoleKey.E:
-                    Environment.Exit(1);
-                    break;
+                }
+
+                switch (Read())
+                {
+                    case ConsoleKey.D1:
+                        status = game.Board.MovePlayer(game, 1);
+                        game.Draw();
+                        continue;
+                    case ConsoleKey.D2:
+                        status = game.Board.MovePlayer(game, 2);
+                        game.Draw();
+                        continue;
+                    case ConsoleKey.D3:
+                        status = game.Board.MovePlayer(game, 3);
+                        game.Draw();
+                        continue;
+                    case ConsoleKey.D4:
+                        status = game.Board.MovePlayer(game, 4);
+                        game.Draw();
+                        continue;
+                    case ConsoleKey.S:
+                        if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
+                        {
+                            status = game.Player.PlaceFigure();
+                        }
+                        else
+                        {
+                            game.Status = "You can't start with a new figure";
+                        }
+
+                        game.Draw();
+                        continue;
+
+                    default:
+                        continue;
+                }
+            }
+        }
+
+        public static void PlaceFigure(Game game)
+        {
+            while (true)
+            {
+                switch (Read())
+                {                  
+                    case ConsoleKey.S:
+                        if (game.Board.PlayerCanPlaceFigure(game.Dice, game.Players, game.Player))
+                        {
+                            game.Player.PlaceFigure();
+                        }
+                        else
+                        {
+                            game.Status = "You can't start with a new figure";
+                        }
+
+                        game.Draw();
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                break;
             }
         }
     }

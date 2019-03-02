@@ -151,6 +151,12 @@ namespace Ludo
                     var diff = figure.Player.FinalPosition - position;
 
                     position = Math.Abs(diff) - 1;
+
+                    if (figure.Player.HasFigureAtHome(position))
+                    {
+                        //game.Status = "You cannot move with this figure";
+                        //return false;
+                    }
                 }
             }
 
@@ -195,8 +201,7 @@ namespace Ludo
                     position = Math.Abs(diff) - 1;
 
                     figure.Home();
-                    game.Status = figure.Player.Name + " moved figure to home {position: " + position + "|diff:" +
-                                  diff + "}";
+                    game.Status = figure.Player.Name + " moved figure to home";
 
                     figure.NewPosition(position);
                     return true;
@@ -211,7 +216,7 @@ namespace Ludo
         {
             if (players == null)
             {
-                return null;
+                return "";
             }
 
             var builder = new StringBuilder();
@@ -248,6 +253,7 @@ namespace Ludo
                             }
 
                             builder.Append("[" + cell + "]");
+                            Console.Write("[" + cell + "]");
                             break;
                         case Cell.P:
 
@@ -257,9 +263,11 @@ namespace Ludo
                             }
 
                             builder.Append("(" + cell + ")");
+                            Console.Write("(" + cell + ")");
                             break;
                         case Cell.H:
 
+                            Console.ForegroundColor = ConsoleColor.Magenta;
                             cell = '#';
 
                             if (-1 < owner && owner <= players.Count)
@@ -268,13 +276,18 @@ namespace Ludo
                             }
 
                             builder.Append(" " + cell + " ");
+                            Console.Write(" " + cell + " ");
+                            Console.ForegroundColor = ConsoleColor.Black;
+
                             break;
                         default:
                             builder.Append("   ");
+                            Console.Write("   ");
                             break;
                     }
                 }
 
+                Console.WriteLine();
                 builder.AppendLine();
             }
 
