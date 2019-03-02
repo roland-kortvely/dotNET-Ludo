@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Ludo
@@ -203,10 +204,44 @@ namespace Ludo
 
             return true;
         }
+        
+        public Figure FigureByPosition(Game game, int index)
+        {
+            var x = new List<Figure>();
+            foreach (var figure in game.CurrentPlayer.Figures)
+            {
+                if (figure.State != Figure.States.Start)
+                {
+                    x.Add(figure);
+                }
+            }
+
+            x = x.OrderBy(figure1 =>
+            {
+                var fig1 = figure1.Position;
+                if (figure1.State == Figure.States.Home)
+                {
+                    return fig1 + Size();
+                }
+
+                return fig1 >= figure1.Player.StartPosition
+                    ? fig1 - figure1.Player.StartPosition
+                    : fig1 + (Size() - figure1.Player.StartPosition);
+            }).ToList();
+
+
+            //DEBUG indexing on board
+            for (var i = 0; i < x.Count; i++)
+            {
+                x[i].Index = i + 1;
+            }
+
+            return x.Count >= index ? x[index - 1] : null;
+        }
 
         public bool MovePlayer(Game game, int figureIndex)
         {
-            var figure = game.CurrentPlayer.FigureByPosition(figureIndex, Size());
+            var figure = FigureByPosition(game, figureIndex);
 
             if (figure == null)
             {

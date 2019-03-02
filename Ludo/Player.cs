@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Ludo
 {
@@ -16,41 +14,7 @@ namespace Ludo
         private bool FirstMove { get; set; }
         public bool ExtraMove { get; private set; }
 
-        public int Index { get; set; }
-
-        public Figure FigureByPosition(int index, int mapSize)
-        {
-            var x = new List<Figure>();
-            foreach (var figure in Figures)
-            {
-                if (figure.State != Figure.States.Start)
-                {
-                    x.Add(figure);
-                }
-            }
-
-            x = x.OrderBy(figure1 =>
-            {
-                var fig1 = figure1.Position;
-                if (figure1.State == Figure.States.Home)
-                {
-                    return fig1 + mapSize;
-                }
-
-                return fig1 >= figure1.Player.StartPosition
-                    ? fig1 - figure1.Player.StartPosition
-                    : fig1 + (mapSize - figure1.Player.StartPosition);
-            }).ToList();
-
-
-            //DEBUG indexing on board
-            for (var i = 0; i < x.Count; i++)
-            {
-                x[i].Index = i + 1;
-            }
-
-            return x.Count >= index ? x[index - 1] : null;
-        }
+        public int Index { get; }
 
         public int StartPosition { get; }
         public int FinalPosition { get; }
