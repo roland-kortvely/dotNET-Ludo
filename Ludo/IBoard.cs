@@ -6,7 +6,7 @@ namespace Ludo
     {
         string Render(Game game);
 
-        bool PlayerCanPlaceFigure(Game game, Player player);
+        bool PlayerCanStartWithFigure(Game game, Player player);
         bool PlayerCanMove(Game game, Figure figure);
 
         bool MovePlayer(Game game, int figureIndex);

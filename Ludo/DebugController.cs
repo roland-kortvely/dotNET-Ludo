@@ -45,7 +45,7 @@ namespace Ludo
                     Game.Draw();
                     break;
                 case ConsoleKey.S:
-                    if (Game.Board.PlayerCanPlaceFigure(Game, Game.CurrentPlayer))
+                    if (Game.Board.PlayerCanStartWithFigure(Game, Game.CurrentPlayer))
                     {
                         Game.CurrentPlayer.PlaceFigure();
                     }

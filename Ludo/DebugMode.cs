@@ -5,6 +5,10 @@ namespace Ludo
         public void Start(Game game)
         {
             Debug.Listen(new DebugController(game));
+            
+            game.Dice.Set(6);
+            
+            game.Draw();
         }
 
         public void Loop(Game game)

@@ -23,7 +23,7 @@ namespace Ludo
             H, //Home
             P, //Player
             S, //Start
-            F  //Final cell to home
+            F //Final cell to home
         }
 
         private int Transform(int position) => position >= Size() ? position - Size() : position;
@@ -42,7 +42,7 @@ namespace Ludo
                         case Cell.S:
                         case Cell.R:
                         case Cell.F:
-                            
+
                             if (mapIndex == position)
                             {
                                 return type;
@@ -108,16 +108,11 @@ namespace Ludo
             return -1;
         }
 
-        private static Figure FigureByPosition(IEnumerable<Player> players, int position)
+        private static Figure FigureByPosition(Game game, int position)
         {
-            if (players == null)
-            {
-                return null;
-            }
-
             Figure figure = null;
 
-            foreach (var player in players)
+            foreach (var player in game.Players)
             {
                 foreach (var current in player.Figures)
                 {
@@ -140,20 +135,20 @@ namespace Ludo
             return figure;
         }
 
-        private static bool CanPlaceFigureAtStart(IEnumerable<Player> players, Player player)
+        public bool PlayerCanStartWithFigure(Game game, Player player)
         {
-            if (players == null)
+            if (game.Dice.Value != 6)
             {
                 return false;
             }
 
-            var figure = FigureByPosition(players, player.StartPosition);
-            return figure == null || figure.Player != player;
-        }
+            if (!player.HasFigureAtStart())
+            {
+                return false;
+            }
 
-        public bool PlayerCanPlaceFigure(Game game, Player player)
-        {
-            return game.Dice.Value == 6 && player.HasFigureAtStart() && CanPlaceFigureAtStart(game.Players, player);
+            var figure = FigureByPosition(game, player.StartPosition);
+            return figure == null || figure.Player != player;
         }
 
         public bool PlayerCanMove(Game game, Figure figure)
@@ -170,39 +165,32 @@ namespace Ludo
 
             var position = Transform(figure.Position + game.Dice.Value);
 
-            if (figure.Position <= figure.Player.FinalPosition)
+            if (figure.AbstractPosition + game.Dice.Value >= Size())
             {
-                if (position > figure.Player.FinalPosition)
-                {
-                    var diff = figure.Player.FinalPosition - position;
+                position = figure.AbstractPosition + game.Dice.Value - Size();
 
-                    position = Math.Abs(diff) - 1;
-
-                    if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            if (figure.State == Figure.States.Home)
-            {
                 if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1)
                 {
                     return false;
                 }
+                
+                if (figure.State == Figure.States.Home)
+                {
+                    if (figure.Player.HasFigureAtHome(position))
+                    {
+                        return false;
+                    }
+                } 
+
+                return true;
             }
 
-            var cell = FigureByPosition(game.Players, position);
-            if (cell != null && figure.Player == cell.Player)
-            {
-                return false;
-            }
+            var cell = FigureByPosition(game, position);
 
-            return true;
+            return cell == null || figure.Player != cell.Player;
         }
-        
-        public Figure FigureByPosition(Game game, int index)
+
+        private Figure FigureByNumericIndex(Game game, int index)
         {
             var x = new List<Figure>();
             foreach (var figure in game.CurrentPlayer.Figures)
@@ -238,7 +226,7 @@ namespace Ludo
 
         public bool MovePlayer(Game game, int figureIndex)
         {
-            var figure = FigureByPosition(game, figureIndex);
+            var figure = FigureByNumericIndex(game, figureIndex);
 
             if (figure == null)
             {
@@ -247,39 +235,33 @@ namespace Ludo
 
             if (!PlayerCanMove(game, figure))
             {
-                game.Status = "You cannot move with this figure";
+                game.Status = "You can't move with this figure";
                 return false;
             }
 
             var position = Transform(figure.Position + game.Dice.Value);
 
-            if (figure.Position <= figure.Player.FinalPosition)
+            if (figure.AbstractPosition + game.Dice.Value >= Size() && figure.State != Figure.States.Home)
             {
-                if (position > figure.Player.FinalPosition)
-                {
-                    var diff = figure.Player.FinalPosition - position;
+                position = figure.AbstractPosition + game.Dice.Value - Size();
 
-                    position = Math.Abs(diff) - 1;
+                figure.Home();
+                game.Status = figure.Player.Name + " moved a figure to home";
 
-                    figure.Home();
-                    game.Status = figure.Player.Name + " moved figure to home";
-
-                    figure.NewPosition(position);
-                    return true;
-                }
+                figure.NewPosition(position, game.Dice);
+                return true;
             }
 
-            var cell = FigureByPosition(game.Players, position);
+            var cell = FigureByPosition(game, position);
             if (cell != null && figure.State == Figure.States.Playing)
             {
                 if (CellTypeByPosition(position) != Cell.S)
                 {
-                    game.Status = game.CurrentPlayer.Name + " kicked " + cell.Player.Name + " figure";
                     cell.Kick();
                 }
             }
 
-            figure.NewPosition(position);
+            figure.NewPosition(position, game.Dice);
             return true;
         }
 
@@ -317,7 +299,7 @@ namespace Ludo
                                 cell = '*';
                             }
 
-                            var figure = FigureByPosition(game.Players, index);
+                            var figure = FigureByPosition(game, index);
                             if (figure != null)
                             {
                                 if (figure.State == Figure.States.Playing)
@@ -332,7 +314,7 @@ namespace Ludo
                             builder.Append("[" + cell + "]");
                             Console.Write(cell);
 
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.White;
                             Console.Write("]");
                             break;
                         case Cell.P:
@@ -350,7 +332,7 @@ namespace Ludo
                             builder.Append("(" + cell + ")");
                             Console.Write(cell);
 
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.White;
 
                             Console.Write(")");
                             break;
@@ -370,13 +352,13 @@ namespace Ludo
                             builder.Append(" " + cell + " ");
                             Console.Write(" " + cell + " ");
 
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.White;
                             break;
                         default:
                             builder.Append("   ");
                             Console.Write("   ");
 
-                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.ForegroundColor = ConsoleColor.White;
                             break;
                     }
                 }

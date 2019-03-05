@@ -4,7 +4,7 @@ namespace Ludo
 {
     public static class InputController
     {
-        private static ConsoleKey Read()
+        public static ConsoleKey Read()
         {
             var key = Console.ReadKey(true).Key;
 
@@ -23,7 +23,7 @@ namespace Ludo
             }
 
             game.Dice.Roll();
-            game.Status = "You rolled " + game.Dice.Value;
+//            game.Status = "You rolled " + game.Dice.Value;
             game.Draw();
         }
 
@@ -65,7 +65,7 @@ namespace Ludo
                         game.Draw();
                         continue;
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanPlaceFigure(game, game.CurrentPlayer))
+                        if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
                         {
                             status = game.CurrentPlayer.PlaceFigure();
                         }
@@ -97,7 +97,7 @@ namespace Ludo
                 switch (Read())
                 {                  
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanPlaceFigure(game, game.CurrentPlayer))
+                        if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
                         {
                             game.CurrentPlayer.PlaceFigure();
                         }

@@ -6,7 +6,7 @@ namespace Ludo
     {
         private static void Main()
         {
-            Console.WriteLine("Ready?");
+            Console.WriteLine("Press any key to start..");
             
             if (Console.ReadKey(true).Key == ConsoleKey.D)
             {

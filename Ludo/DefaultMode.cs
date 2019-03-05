@@ -35,7 +35,7 @@ namespace Ludo
                 InputController.Roll(game);
             }
 
-            game.Status = "Move with figure";
+            game.Status = "Move with a figure";
             game.Draw();
             InputController.MovePlayer(game);
 

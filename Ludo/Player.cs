@@ -33,7 +33,7 @@ namespace Ludo
             Figures = new List<Figure>();
             for (var i = 0; i < figuresStart; i++)
             {
-                Figures.Add(new Figure(this, -1));
+                Figures.Add(new Figure(this));
             }
 
             StartPosition = startPosition;
@@ -78,6 +78,7 @@ namespace Ludo
                 }
 
                 figure.PlaceAtStart();
+                
                 FiguresStart--;
                 return true;
             }
@@ -102,7 +103,7 @@ namespace Ludo
                 switch (figure.State)
                 {
                     case Figure.States.Start:
-                        if (game.Board.PlayerCanPlaceFigure(game, this))
+                        if (game.Board.PlayerCanStartWithFigure(game, this))
                         {
                             return true;
                         }

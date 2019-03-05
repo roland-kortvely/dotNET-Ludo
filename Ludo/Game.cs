@@ -70,7 +70,7 @@ namespace Ludo
                 break;
             }
 
-            Status = "Player " + CurrentPlayer.Name + " turn";
+            Status = CurrentPlayer.Name + "'s turn";
         }
 
         public void Start()
@@ -102,7 +102,7 @@ namespace Ludo
                 Console.Write("Player " + (i + 1) + " name: ");
                 var name = Console.ReadLine();
 
-                Console.Write(name + " symbol: ");
+                Console.Write("Player " + (i + 1) + " symbol: ");
                 var symbol = Console.Read();
                 Console.ReadLine();
 
@@ -126,10 +126,10 @@ namespace Ludo
                 GameMode.Loop(this);
             }
 
-            Status = "Player " + CurrentPlayer.Name + " won";
+            Status = CurrentPlayer.Name + " has won!";
 
             //Console.CursorVisible = true;
-            Console.ReadKey();
+            Console.ReadKey(true);
         }
 
         private void Reset()
@@ -171,6 +171,8 @@ namespace Ludo
             builder.Append("Ludo by Roland Körtvely ").AppendLine(Mode);
 
             builder.AppendLine("----------------------------");
+            
+            builder.AppendLine("Use [Space] to roll the dice, [numpad] to move with a figure.");
 
             builder.Append("Dice: ").Append(Dice.Value.ToString()).Append(" <-> Current player: ")
                 .AppendLine(CurrentPlayer.Name);

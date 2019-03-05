@@ -12,14 +12,18 @@ namespace Ludo
         public Player Player { get; }
         public int Position { get; private set; }
 
+        public int AbstractPosition { get; private set; }
+
         public int Index { get; set; }
 
         public States State { get; private set; }
 
-        public Figure(Player player, int position)
+        public Figure(Player player)
         {
-            Position = position;
             Player = player;
+
+            Position = -1;
+            AbstractPosition = 0;
 
             State = States.Start;
         }
@@ -31,15 +35,16 @@ namespace Ludo
             State = States.Playing;
         }
 
-        public void NewPosition(int position)
+        public void NewPosition(int position, Dice dice)
         {
             Position = position;
+            AbstractPosition += dice.Value;
         }
 
         public void Kick()
         {
             Position = -1;
-            
+
             Player.KickTrigger();
 
             State = States.Start;
@@ -54,8 +59,10 @@ namespace Ludo
 
         public void Reset()
         {
-            State = States.Start;
             Position = -1;
+            AbstractPosition = 0;
+
+            State = States.Start;
         }
     }
 }
