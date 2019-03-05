@@ -8,14 +8,14 @@ namespace Ludo
             Home,
             Playing
         }
-        
+
         public Player Player { get; }
         public int Position { get; private set; }
-        
+
         public int Index { get; set; }
 
         public States State { get; private set; }
-        
+
         public Figure(Player player, int position)
         {
             Position = position;
@@ -39,6 +39,7 @@ namespace Ludo
         public void Kick()
         {
             Position = -1;
+            
             Player.KickTrigger();
 
             State = States.Start;
@@ -49,6 +50,12 @@ namespace Ludo
             Player.HomeTrigger();
 
             State = States.Home;
+        }
+
+        public void Reset()
+        {
+            State = States.Start;
+            Position = -1;
         }
     }
 }

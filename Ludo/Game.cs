@@ -30,6 +30,7 @@ namespace Ludo
             Players = new List<Player>();
 
             Reset();
+
             Start();
             Loop();
         }
@@ -125,18 +126,34 @@ namespace Ludo
                 GameMode.Loop(this);
             }
 
-            Console.CursorVisible = true;
+            Status = "Player " + CurrentPlayer.Name + " won";
+
+            //Console.CursorVisible = true;
             Console.ReadKey();
         }
 
         private void Reset()
         {
             Dice = new Dice();
+
+            foreach (var player in Players)
+            {
+                player.Reset();
+            }
+
             Status = "Game initialized";
         }
 
         private bool IsGameOver()
         {
+            foreach (var player in Players)
+            {
+                if (player.Finished())
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -155,7 +172,8 @@ namespace Ludo
 
             builder.AppendLine("----------------------------");
 
-            builder.Append("Dice: ").Append(Dice.Value.ToString()).Append(" <-> Current player: ").AppendLine(CurrentPlayer.Name);
+            builder.Append("Dice: ").Append(Dice.Value.ToString()).Append(" <-> Current player: ")
+                .AppendLine(CurrentPlayer.Name);
 
             builder.AppendLine("Status: " + Status);
 

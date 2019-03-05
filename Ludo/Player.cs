@@ -11,8 +11,8 @@ namespace Ludo
         public char Symbol { get; }
         public List<Figure> Figures { get; }
 
-        private bool FirstMove { get; set; }
-        public bool ExtraMove { get; private set; }
+        public bool FirstMove { get; set; }
+        public bool ExtraMove { get; set; }
 
         public int Index { get; }
 
@@ -125,38 +125,30 @@ namespace Ludo
             return false;
         }
 
-        public void Turn(Game game)
+        public bool Finished()
         {
-            ExtraMove = false;
-
-            if (!FirstMove)
+            foreach (var figure in Figures)
             {
-                game.Status = "Roll the dice";
-                game.Draw();
-                InputController.Roll(game);
-
-                if (game.Dice.Value == 6)
+                if (figure.State != Figure.States.Home)
                 {
-                    ExtraMove = true;
+                    return false;
                 }
             }
-            else
+
+            return true;
+        }
+
+        public void Reset()
+        {
+            foreach (var figure in Figures)
             {
-                FirstMove = false;
-
-                game.Dice.Set(6);
-                game.Status = "Place your first figure";
-                game.Draw();
-                InputController.PlaceFigure(game);
-
-                game.Status = "Roll the dice";
-                game.Draw();
-                InputController.Roll(game);
+                figure.Reset();
             }
 
-            game.Status = "Move with figure";
-            game.Draw();
-            InputController.MovePlayer(game);
+            FirstMove = true;
+            ExtraMove = false;
+            FiguresHome = 0;
+            FiguresStart = Figures.Count;
         }
     }
 }

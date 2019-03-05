@@ -26,10 +26,7 @@ namespace Ludo
             F  //Final cell to home
         }
 
-        private int Transform(int position)
-        {
-            return position >= Size() ? position - Size() : position;
-        }
+        private int Transform(int position) => position >= Size() ? position - Size() : position;
 
         private Cell CellTypeByPosition(int position)
         {
