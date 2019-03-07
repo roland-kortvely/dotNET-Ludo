@@ -97,6 +97,8 @@ namespace Ludo
 
         private void Reset()
         {
+            UserInterface.Reset(this);
+
             Dice = new Dice();
 
             foreach (var player in Players)
@@ -107,7 +109,6 @@ namespace Ludo
             Status = "Game initialized";
 
             GameMode.Reset(this);
-            UserInterface.Reset(this);
         }
 
         public bool IsGameOver()
