@@ -13,7 +13,7 @@ namespace Ludo
             if (!game.CurrentPlayer.FirstMove)
             {
                 game.Status = "Roll the dice";
-                game.Draw();
+                game.RefreshUserInterface();
                 InputController.Roll(game);
 
                 if (game.Dice.Value == 6)
@@ -27,22 +27,27 @@ namespace Ludo
 
                 game.Dice.Set(6);
                 game.Status = "Place your first figure";
-                game.Draw();
+                game.RefreshUserInterface();
                 InputController.PlaceFigure(game);
 
                 game.Status = "Roll the dice";
-                game.Draw();
+                game.RefreshUserInterface();
                 InputController.Roll(game);
             }
 
             game.Status = "Move with a figure";
-            game.Draw();
+            game.RefreshUserInterface();
             InputController.MovePlayer(game);
 
             if (!game.CurrentPlayer.ExtraMove)
             {
                 game.NextPlayer();
             }
+        }
+
+        public void Reset(Game game)
+        {
+            
         }
     }
 }

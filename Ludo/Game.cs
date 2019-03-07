@@ -7,7 +7,9 @@ namespace Ludo
     public class Game
     {
         public IBoard Board { get; }
-        private IGameMode GameMode { get; }
+        public IGameMode GameMode { get; }
+
+        private IUserInterface UserInterface { get; set; }
 
         public List<Player> Players { get; }
 
@@ -17,13 +19,14 @@ namespace Ludo
 
         public Dice Dice { get; private set; }
 
-        public string Status { private get; set; }
-        public string Mode { private get; set; }
+        public string Status { get; set; }
+        public string Mode { get; set; }
 
-        public Game(IBoard board, IGameMode gameMode)
+        public Game(IBoard board, IGameMode gameMode, IUserInterface userInterface)
         {
             Board = board;
             GameMode = gameMode;
+            UserInterface = userInterface;
 
             _currentPlayer = 0;
 
@@ -35,7 +38,7 @@ namespace Ludo
             Loop();
         }
 
-        private bool NewPlayer(string name, char symbol)
+        public bool NewPlayer(string name, char symbol)
         {
             if (name == null)
             {
@@ -75,47 +78,7 @@ namespace Ludo
 
         public void Start()
         {
-            var players = 0;
-
-            do
-            {
-                Console.Write("Player mode (max " + Board.MaxPlayers() + "): ");
-
-                try
-                {
-                    players = Convert.ToInt32(Console.ReadLine());
-
-                    if (players < 2 || players > Board.MaxPlayers())
-                    {
-                        Console.WriteLine("Out of range..");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Status = e.ToString();
-                }
-            } while (players < 2 || players > Board.MaxPlayers());
-
-
-            for (var i = 0; i < players; i++)
-            {
-                Console.Write("Player " + (i + 1) + " name: ");
-                var name = Console.ReadLine();
-
-                Console.Write("Player " + (i + 1) + " symbol: ");
-                var symbol = Console.Read();
-                Console.ReadLine();
-
-                NewPlayer(name, (char) symbol);
-            }
-
-            Console.CursorVisible = false;
-
-            if (Players.Count == 0)
-            {
-                return;
-            }
-
+            UserInterface.Start(this);
             GameMode.Start(this);
         }
 
@@ -124,12 +87,12 @@ namespace Ludo
             while (!IsGameOver())
             {
                 GameMode.Loop(this);
+                UserInterface.Loop(this);
             }
 
             Status = CurrentPlayer.Name + " has won!";
 
-            //Console.CursorVisible = true;
-            Console.ReadKey(true);
+            Reset();
         }
 
         private void Reset()
@@ -142,9 +105,12 @@ namespace Ludo
             }
 
             Status = "Game initialized";
+
+            GameMode.Reset(this);
+            UserInterface.Reset(this);
         }
 
-        private bool IsGameOver()
+        public bool IsGameOver()
         {
             foreach (var player in Players)
             {
@@ -157,32 +123,9 @@ namespace Ludo
             return false;
         }
 
-        public void Draw()
+        public void RefreshUserInterface()
         {
-            if (Players.Count == 0)
-            {
-                return;
-            }
-
-            Console.Clear();
-
-            var builder = new StringBuilder();
-
-            builder.Append("Ludo by Roland Körtvely ").AppendLine(Mode);
-
-            builder.AppendLine("----------------------------");
-            
-            builder.AppendLine("Use [Space] to roll the dice, [numpad] to move with a figure.");
-
-            builder.Append("Dice: ").Append(Dice.Value.ToString()).Append(" <-> Current player: ")
-                .AppendLine(CurrentPlayer.Name);
-
-            builder.AppendLine("Status: " + Status);
-
-            Console.WriteLine(builder.ToString());
-
-            //builder.AppendLine(Board.Render(this));
-            Board.Render(this);
+            UserInterface.Render(this);
         }
     }
 }

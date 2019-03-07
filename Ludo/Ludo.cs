@@ -10,11 +10,11 @@ namespace Ludo
             
             if (Console.ReadKey(true).Key == ConsoleKey.D)
             {
-                new Game(new DefaultBoard(), new DebugMode());
+                new Game(new DefaultBoard(), new DebugMode(), new ConsoleUI());
             }
             else
             {
-                new Game(new DefaultBoard(), new DefaultMode());
+                new Game(new DefaultBoard(), new DefaultMode(), new ConsoleUI());
             }
         }
     }

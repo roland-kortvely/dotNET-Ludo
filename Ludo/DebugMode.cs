@@ -8,11 +8,16 @@ namespace Ludo
             
             game.Dice.Set(6);
             
-            game.Draw();
+            game.RefreshUserInterface();
         }
 
         public void Loop(Game game)
         {
+        }
+
+        public void Reset(Game game)
+        {
+            
         }
     }
 }

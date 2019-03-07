@@ -12,7 +12,7 @@ namespace Ludo
 
             game.Status = "DEBUG MODE";
             game.Mode = "| DEBUG";
-            game.Draw();
+            game.RefreshUserInterface();
         }
 
         public void ReadKey(ConsoleKey key)
@@ -22,27 +22,27 @@ namespace Ludo
                 case ConsoleKey.Spacebar:
                     Game.Dice.Roll();
                     Game.Status = "You rolled " + Game.Dice.Value;
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.N:
                     Game.NextPlayer();
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D1:
                     Game.Board.MovePlayer(Game, 1);
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D2:
                     Game.Board.MovePlayer(Game, 2);
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D3:
                     Game.Board.MovePlayer(Game, 3);
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D4:
                     Game.Board.MovePlayer(Game, 4);
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.S:
                     if (Game.Board.PlayerCanStartWithFigure(Game, Game.CurrentPlayer))
@@ -53,9 +53,9 @@ namespace Ludo
                     {
                         Game.Status = "You can't start with a new figure";
                     }
-                    Game.Draw();
+                    Game.RefreshUserInterface();
                     break;
-                case ConsoleKey.E:
+                case ConsoleKey.Escape:
                     Environment.Exit(1);
                     break;
             }

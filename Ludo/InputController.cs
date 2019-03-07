@@ -8,7 +8,7 @@ namespace Ludo
         {
             var key = Console.ReadKey(true).Key;
 
-            if (key == ConsoleKey.E)
+            if (key == ConsoleKey.Escape)
             {
                 Environment.Exit(1);
             }
@@ -24,7 +24,7 @@ namespace Ludo
 
             game.Dice.Roll();
 //            game.Status = "You rolled " + game.Dice.Value;
-            game.Draw();
+            game.RefreshUserInterface();
         }
 
         public static void MovePlayer(Game game)
@@ -35,7 +35,7 @@ namespace Ludo
                 if (!game.CurrentPlayer.MovePossible(game))
                 {
                     game.Status = "No move possible";
-                    game.Draw();
+                    game.RefreshUserInterface();
 
                     Read();
                     break;
@@ -50,19 +50,19 @@ namespace Ludo
                 {
                     case ConsoleKey.D1:
                         status = game.Board.MovePlayer(game, 1);
-                        game.Draw();
+                        game.RefreshUserInterface();
                         continue;
                     case ConsoleKey.D2:
                         status = game.Board.MovePlayer(game, 2);
-                        game.Draw();
+                        game.RefreshUserInterface();
                         continue;
                     case ConsoleKey.D3:
                         status = game.Board.MovePlayer(game, 3);
-                        game.Draw();
+                        game.RefreshUserInterface();
                         continue;
                     case ConsoleKey.D4:
                         status = game.Board.MovePlayer(game, 4);
-                        game.Draw();
+                        game.RefreshUserInterface();
                         continue;
                     case ConsoleKey.S:
                         if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
@@ -74,7 +74,7 @@ namespace Ludo
                             game.Status = "You can't start with a new figure";
                         }
 
-                        game.Draw();
+                        game.RefreshUserInterface();
                         continue;
 
                     default:
@@ -90,7 +90,7 @@ namespace Ludo
                 if (!game.CurrentPlayer.MovePossible(game))
                 {
                     game.Status = "No move possible";
-                    game.Draw();
+                    game.RefreshUserInterface();
                     break;
                 }
                 
@@ -106,7 +106,7 @@ namespace Ludo
                             game.Status = "You can't start with a new figure";
                         }
 
-                        game.Draw();
+                        game.RefreshUserInterface();
                         break;
 
                     default:
