@@ -8,8 +8,10 @@ namespace Ludo
     {
         public IBoard Board { get; }
         public IGameMode GameMode { get; }
-
-        private IUserInterface UserInterface { get; set; }
+        public IUserInterface UserInterface { get; }
+        public IScoreService ScoreService { get; set; }
+        public IRatingService RatingService { get; set; }
+        public ICommentService CommentService { get; set; }
 
         public List<Player> Players { get; }
 
@@ -31,6 +33,10 @@ namespace Ludo
             _currentPlayer = 0;
 
             Players = new List<Player>();
+            
+            ScoreService = new ScoreService();
+            RatingService = new RatingService();
+            CommentService = new CommentService();
 
             Reset();
 
