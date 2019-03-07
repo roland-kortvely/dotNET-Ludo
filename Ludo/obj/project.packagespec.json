@@ -1,10 +1,10 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "D:\\GitHub\\TUKE\\Ludo\\Ludo.csproj",
+    "projectUniqueName": "D:\\GitHub\\dotNET Ludo\\Ludo\\Ludo.csproj",
     "projectName": "Ludo",
-    "projectPath": "D:\\GitHub\\TUKE\\Ludo\\Ludo.csproj",
-    "outputPath": "D:\\GitHub\\TUKE\\Ludo\\obj\\",
+    "projectPath": "D:\\GitHub\\dotNET Ludo\\Ludo\\Ludo.csproj",
+    "outputPath": "D:\\GitHub\\dotNET Ludo\\Ludo\\obj\\",
     "projectStyle": "PackageReference",
     "fallbackFolders": [
       "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

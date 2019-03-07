@@ -8,7 +8,7 @@ namespace Ludo
         {
             var key = Console.ReadKey(true).Key;
 
-            if (key == ConsoleKey.Escape)
+            if (key == ConsoleKey.E)
             {
                 Environment.Exit(1);
             }

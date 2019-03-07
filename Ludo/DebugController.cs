@@ -55,7 +55,7 @@ namespace Ludo
                     }
                     Game.RefreshUserInterface();
                     break;
-                case ConsoleKey.Escape:
+                case ConsoleKey.E:
                     Environment.Exit(1);
                     break;
             }
