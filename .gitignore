@@ -32,3 +32,5 @@ HelloWorld/bin/
 Ludo/bin/
 
 *.uml~
+
+LudoTest/bin/
