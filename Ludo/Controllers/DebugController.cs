@@ -20,8 +20,17 @@ namespace Ludo.Controllers
         {
             switch (key)
             {
+                case ConsoleKey.W:
+
+                    foreach (var figure in Game.CurrentPlayer.Figures)
+                    {
+                        figure.Home();
+                    }
+
+                    Game.RefreshUserInterface();
+                    break;
                 case ConsoleKey.Spacebar:
-                    Game.Dice.Roll();
+                    Game.Roll();
                     Game.Status = "You rolled " + Game.Dice.Value;
                     Game.RefreshUserInterface();
                     break;
@@ -30,24 +39,24 @@ namespace Ludo.Controllers
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D1:
-                    Game.Board.MovePlayer(Game, 1);
+                    Game.MovePlayer(1);
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D2:
-                    Game.Board.MovePlayer(Game, 2);
+                    Game.MovePlayer(2);
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D3:
-                    Game.Board.MovePlayer(Game, 3);
+                    Game.MovePlayer(3);
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.D4:
-                    Game.Board.MovePlayer(Game, 4);
+                    Game.MovePlayer(4);
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.S:
-                    if (Game.Board.PlayerCanStartWithFigure(Game))
-                        Game.CurrentPlayer.StartWithFigure();
+                    if (Game.PlayerCanStartWithFigure())
+                        Game.StartWithFigure();
                     else
                         Game.Status = "You can't start with a new figure";
                     Game.RefreshUserInterface();

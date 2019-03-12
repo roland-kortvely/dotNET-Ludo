@@ -9,6 +9,8 @@ namespace Ludo.UserInterfaces
     {
         public void Start(Game game)
         {
+            Console.CursorVisible = true;
+            
             var players = 0;
 
             do
@@ -77,7 +79,7 @@ namespace Ludo.UserInterfaces
         public void Reset(Game game)
         {
             //Console.CursorVisible = true;
-            Console.ReadKey(true);
+            //Console.ReadKey(true);
         }
 
         private void RenderBoard(Game game)

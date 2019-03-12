@@ -13,7 +13,6 @@ namespace Ludo.GameModes
         {
             _game = game;
             game.Mode = "| AGAINST BOT";
-            game.RefreshUserInterface();
         }
 
         public void Loop(Game game)
@@ -87,15 +86,15 @@ namespace Ludo.GameModes
 
             WaitAndRender();
 
-            game.CurrentPlayer.StartWithFigure();
+            game.StartWithFigure();
 
             WaitAndRender();
 
-            game.Dice.Roll();
+            game.Roll();
 
             WaitAndRender();
 
-            game.Board.MovePlayer(game, 1);
+            game.MovePlayer(1);
 
             WaitAndRender();
         }
@@ -106,7 +105,7 @@ namespace Ludo.GameModes
             {
                 WaitAndRender();
 
-                game.Dice.Roll();
+                game.Roll();
 
                 WaitAndRender();
 
@@ -129,7 +128,7 @@ namespace Ludo.GameModes
                         continue;
                     }
 
-                    if (!game.Board.PlayerCanMove(game, figure))
+                    if (!game.PlayerCanMove(figure))
                     {
                         continue;
                     }

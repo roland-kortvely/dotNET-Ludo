@@ -11,9 +11,6 @@ namespace Ludo.Entities
             Symbol = symbol;
 
             Name = name;
-            FiguresStart = figuresStart;
-
-            FiguresHome = 0;
 
             Figures = new List<Figure>();
             for (var i = 0; i < figuresStart; i++) Figures.Add(new Figure(this));
@@ -24,9 +21,6 @@ namespace Ludo.Entities
             FirstMove = true;
             ExtraMove = false;
         }
-
-        private int FiguresHome { get; set; }
-        private int FiguresStart { get; set; }
 
         public string Name { get; }
         public char Symbol { get; }
@@ -40,34 +34,39 @@ namespace Ludo.Entities
         public int StartPosition { get; }
         public int FinalPosition { get; }
 
-        public bool HasFigureAtStart(int index = -1)
+        public bool HasFigureAtStart(int index = 0)
         {
-            return FiguresStart >= index + 1;
+            if (Figures.Count < index)
+            {
+                return false;
+            }
+
+
+            var figure = Figures[index];
+
+            return (figure.State == Figure.States.Start);
         }
 
         public bool HasFigureAtHome(int index)
         {
-            foreach (var figure in Figures)
+            if (Figures.Count < index)
             {
-                if (figure.State != Figure.States.Home) continue;
-
-                if (figure.Position == index) return true;
+                return false;
             }
 
-            return false;
+
+            var figure = Figures[index];
+
+            return (figure.State == Figure.States.Home);
         }
 
         public bool StartWithFigure()
         {
-            if (FiguresStart <= 0) return false;
-
             foreach (var figure in Figures)
             {
                 if (figure.State != Figure.States.Start) continue;
 
                 figure.PlaceAtStart();
-
-                FiguresStart--;
                 return true;
             }
 
@@ -76,12 +75,10 @@ namespace Ludo.Entities
 
         public void KickTrigger()
         {
-            FiguresStart++;
         }
 
         public void HomeTrigger()
         {
-            FiguresHome++;
         }
 
         public bool MovePossible(Game game)
@@ -121,8 +118,6 @@ namespace Ludo.Entities
 
             FirstMove = true;
             ExtraMove = false;
-            FiguresHome = 0;
-            FiguresStart = Figures.Count;
         }
     }
 }

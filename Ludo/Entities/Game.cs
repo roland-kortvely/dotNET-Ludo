@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using System.Threading;
+using Ludo.Database;
 using Ludo.Interfaces;
 using Ludo.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ludo.Entities
 {
@@ -15,13 +16,11 @@ namespace Ludo.Entities
             GameMode = gameMode;
             UserInterface = userInterface;
 
-            _currentPlayer = 0;
+            DB = new LudoContext();
 
-            Players = new List<Player>();
-
-            ScoreService = new ScoreService();
-            RatingService = new RatingService();
-            CommentService = new CommentService();
+            ScoreService = new ScoreService(this);
+            RatingService = new RatingService(this);
+            CommentService = new CommentService(this);
 
             Reset();
 
@@ -29,6 +28,7 @@ namespace Ludo.Entities
             Loop();
         }
 
+        public DbContext DB { get; }
         public IBoard Board { get; }
         public IGameMode GameMode { get; }
         public IUserInterface UserInterface { get; }
@@ -42,8 +42,9 @@ namespace Ludo.Entities
         public bool MovePlayer(Figure figure) => Board.MovePlayer(this, figure);
         public bool MovePossible() => CurrentPlayer.MovePossible(this);
         public bool StartWithFigure() => CurrentPlayer.StartWithFigure();
+        public void Roll() => Dice.Roll();
 
-        public List<Player> Players { get; }
+        public List<Player> Players { get; private set; }
 
         public Player CurrentPlayer => Players[_currentPlayer];
 
@@ -82,16 +83,16 @@ namespace Ludo.Entities
 
         public void Start()
         {
-            UserInterface.Start(this);
-            GameMode.Start(this);
+            GameMode?.Start(this);
+            UserInterface?.Start(this);
         }
 
         public void Loop()
         {
             while (!IsGameOver())
             {
-                GameMode.Loop(this);
-                UserInterface.Loop(this);
+                GameMode?.Loop(this);
+                UserInterface?.Loop(this);
             }
 
             Status = CurrentPlayer.Name + " has won!";
@@ -101,15 +102,15 @@ namespace Ludo.Entities
 
         private void Reset()
         {
-            UserInterface.Reset(this);
+            _currentPlayer = 0;
 
+            Players = new List<Player>();
             Dice = new Dice();
 
             foreach (var player in Players) player.Reset();
 
-            Status = "Game initialized";
-
-            GameMode.Reset(this);
+            GameMode?.Reset(this);
+            UserInterface?.Reset(this);
         }
 
         public bool IsGameOver()
@@ -123,7 +124,7 @@ namespace Ludo.Entities
 
         public void RefreshUserInterface()
         {
-            UserInterface.Render(this);
+            UserInterface?.Render(this);
         }
     }
 }

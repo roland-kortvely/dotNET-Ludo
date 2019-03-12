@@ -18,7 +18,6 @@ namespace Ludo.GameModes
 
             game.Status = "DEBUG MODE";
             game.Mode = "| DEBUG";
-            game.RefreshUserInterface();
         }
 
         public void Loop(Game game)

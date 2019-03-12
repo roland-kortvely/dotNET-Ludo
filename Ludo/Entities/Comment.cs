@@ -1,5 +1,8 @@
+using System;
+
 namespace Ludo.Entities
 {
+    [Serializable]
     public class Comment
     {
         public int Id { get; set; }

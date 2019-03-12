@@ -7,6 +7,13 @@ namespace Ludo.Services
 {
     public class ScoreService : IScoreService
     {
+        private Game _game;
+
+        public ScoreService(Game game)
+        {
+            _game = game;
+        }
+
         public void Add(Score score)
         {
             throw new NotImplementedException();
