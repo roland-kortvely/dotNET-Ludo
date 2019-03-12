@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using Ludo.Interfaces;
 using Ludo.Services;
 
@@ -34,6 +35,13 @@ namespace Ludo.Entities
         public IScoreService ScoreService { get; set; }
         public IRatingService RatingService { get; set; }
         public ICommentService CommentService { get; set; }
+
+        public bool PlayerCanStartWithFigure() => Board.PlayerCanStartWithFigure(this);
+        public bool PlayerCanMove(Figure figure) => Board.PlayerCanMove(this, figure);
+        public bool MovePlayer(int figureIndex) => Board.MovePlayer(this, figureIndex);
+        public bool MovePlayer(Figure figure) => Board.MovePlayer(this, figure);
+        public bool MovePossible() => CurrentPlayer.MovePossible(this);
+        public bool StartWithFigure() => CurrentPlayer.StartWithFigure();
 
         public List<Player> Players { get; }
 

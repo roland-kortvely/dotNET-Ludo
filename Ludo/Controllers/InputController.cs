@@ -32,7 +32,7 @@ namespace Ludo.Controllers
             {
                 if (!game.CurrentPlayer.MovePossible(game))
                 {
-                    game.Status = "No move possible";
+                    game.Status = "No move possible [Press any key]";
                     game.RefreshUserInterface();
 
                     Read();
@@ -60,8 +60,8 @@ namespace Ludo.Controllers
                         game.RefreshUserInterface();
                         continue;
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
-                            status = game.CurrentPlayer.PlaceFigure();
+                        if (game.Board.PlayerCanStartWithFigure(game))
+                            status = game.CurrentPlayer.StartWithFigure();
                         else
                             game.Status = "You can't start with a new figure";
 
@@ -80,7 +80,7 @@ namespace Ludo.Controllers
             {
                 if (!game.CurrentPlayer.MovePossible(game))
                 {
-                    game.Status = "No move possible";
+                    game.Status = "No move possible [Press any key]";
                     game.RefreshUserInterface();
                     break;
                 }
@@ -88,8 +88,8 @@ namespace Ludo.Controllers
                 switch (Read())
                 {
                     case ConsoleKey.S:
-                        if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
-                            game.CurrentPlayer.PlaceFigure();
+                        if (game.Board.PlayerCanStartWithFigure(game))
+                            game.CurrentPlayer.StartWithFigure();
                         else
                             game.Status = "You can't start with a new figure";
 

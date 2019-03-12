@@ -87,14 +87,14 @@ namespace Ludo.Entities
             return figure;
         }
 
-        public bool PlayerCanStartWithFigure(Game game, Player player)
+        public bool PlayerCanStartWithFigure(Game game)
         {
             if (game.Dice.Value != 6) return false;
 
-            if (!player.HasFigureAtStart()) return false;
+            if (!game.CurrentPlayer.HasFigureAtStart()) return false;
 
-            var figure = FigureByPosition(game, player.StartPosition);
-            return figure == null || figure.Player != player;
+            var figure = FigureByPosition(game, game.CurrentPlayer.StartPosition);
+            return figure == null || figure.Player != game.CurrentPlayer;
         }
 
         public bool PlayerCanMove(Game game, Figure figure)
@@ -123,11 +123,12 @@ namespace Ludo.Entities
             return cell == null || figure.Player != cell.Player;
         }
 
-        public bool MovePlayer(Game game, int figureIndex)
+        public bool MovePlayer(Game game, Figure figure)
         {
-            var figure = FigureByNumericIndex(game, figureIndex);
-
-            if (figure == null) return false;
+            if (figure == null)
+            {
+                return false;
+            }
 
             if (!PlayerCanMove(game, figure))
             {
@@ -155,6 +156,15 @@ namespace Ludo.Entities
 
             figure.NewPosition(position, game.Dice);
             return true;
+        }
+
+        public bool MovePlayer(Game game, int figureIndex)
+        {
+            var figure = FigureByNumericIndex(game, figureIndex);
+
+            if (figure == null) return false;
+
+            return MovePlayer(game, figure);
         }
 
         private int Transform(int position)

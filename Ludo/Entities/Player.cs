@@ -57,7 +57,7 @@ namespace Ludo.Entities
             return false;
         }
 
-        public bool PlaceFigure()
+        public bool StartWithFigure()
         {
             if (FiguresStart <= 0) return false;
 
@@ -90,7 +90,7 @@ namespace Ludo.Entities
                 switch (figure.State)
                 {
                     case Figure.States.Start:
-                        if (game.Board.PlayerCanStartWithFigure(game, this)) return true;
+                        if (game.Board.PlayerCanStartWithFigure(game)) return true;
 
                         break;
                     case Figure.States.Home:

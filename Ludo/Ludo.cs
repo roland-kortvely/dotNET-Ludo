@@ -12,10 +12,20 @@ namespace Ludo
         {
             Console.WriteLine("Press any key to start..");
 
-            if (Console.ReadKey(true).Key == ConsoleKey.D)
-                new Game(new DefaultBoard(), new DebugMode(), new ConsoleUI());
-            else
-                new Game(new DefaultBoard(), new DefaultMode(), new ConsoleUI());
+            var key = Console.ReadKey(true).Key;
+
+            switch (key)
+            {
+                case ConsoleKey.D:
+                    new Game(new DefaultBoard(), new DebugMode(), new ConsoleUI());
+                    break;
+                case ConsoleKey.B:
+                    new Game(new DefaultBoard(), new BotMode(), new ConsoleUI());
+                    break;
+                default:
+                    new Game(new DefaultBoard(), new DefaultMode(), new ConsoleUI());
+                    break;
+            }
         }
     }
 }

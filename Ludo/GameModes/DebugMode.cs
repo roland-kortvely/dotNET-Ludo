@@ -16,6 +16,8 @@ namespace Ludo.GameModes
 
             game.Dice.Set(6);
 
+            game.Status = "DEBUG MODE";
+            game.Mode = "| DEBUG";
             game.RefreshUserInterface();
         }
 

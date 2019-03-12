@@ -46,8 +46,8 @@ namespace Ludo.Controllers
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.S:
-                    if (Game.Board.PlayerCanStartWithFigure(Game, Game.CurrentPlayer))
-                        Game.CurrentPlayer.PlaceFigure();
+                    if (Game.Board.PlayerCanStartWithFigure(Game))
+                        Game.CurrentPlayer.StartWithFigure();
                     else
                         Game.Status = "You can't start with a new figure";
                     Game.RefreshUserInterface();
