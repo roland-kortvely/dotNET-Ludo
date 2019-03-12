@@ -134,8 +134,10 @@ namespace Ludo.GameModes
                         continue;
                     }
 
-                    game.MovePlayer(figure);
-                    break;
+                    if (game.MovePlayer(figure))
+                    {
+                        break;
+                    }
                 }
             } while (game.Dice.Value == 6);
         }
