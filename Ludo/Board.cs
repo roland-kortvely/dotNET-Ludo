@@ -10,10 +10,10 @@ namespace Ludo
         public abstract int MaxPlayers();
         public abstract int PlayerFigures();
 
-        protected abstract int Size();
-        protected abstract Cell[,] Map();
-        protected abstract int[,] Owners();
-        protected abstract int[,] MapIndex();
+        public abstract int Size();
+        public abstract Cell[,] Map();
+        public abstract int[,] Owners();
+        public abstract int[,] MapIndex();
         public abstract ConsoleColor Colors(int index);
 
         public enum Cell
@@ -108,7 +108,7 @@ namespace Ludo
             return -1;
         }
 
-        private static Figure FigureByPosition(Game game, int position)
+        public Figure FigureByPosition(Game game, int position)
         {
             Figure figure = null;
 
@@ -263,111 +263,6 @@ namespace Ludo
 
             figure.NewPosition(position, game.Dice);
             return true;
-        }
-
-        public string Render(Game game)
-        {
-            if (game.Players == null)
-            {
-                return "";
-            }
-
-            var builder = new StringBuilder();
-
-            for (var i = 0; i <= Map().GetUpperBound(0); i++)
-            {
-                for (var j = 0; j <= Map().GetUpperBound(1); j++)
-                {
-                    var type = Map()[i, j];
-                    var owner = Owners()[i, j];
-                    var index = MapIndex()[i, j];
-
-                    var cell = ' ';
-
-                    switch (type)
-                    {
-                        case Cell.S:
-                        case Cell.R:
-                        case Cell.F:
-
-                            Console.Write("[");
-
-                            if (type == Cell.S)
-                            {
-                                Console.ForegroundColor = Colors(owner - 1);
-
-                                cell = '*';
-                            }
-
-                            var figure = FigureByPosition(game, index);
-                            if (figure != null)
-                            {
-                                if (figure.State == Figure.States.Playing)
-                                {
-                                    //cell = (char) (figure.Index + 48);
-                                    cell = figure.Player.Symbol;
-
-                                    Console.ForegroundColor = Colors(figure.Player.Index);
-                                }
-                            }
-
-                            builder.Append("[" + cell + "]");
-                            Console.Write(cell);
-
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.Write("]");
-                            break;
-                        case Cell.P:
-                            Console.Write("(");
-
-                            Console.ForegroundColor = Colors(owner - 1);
-
-                            if (-1 < owner && owner <= game.Players.Count)
-                            {
-                                cell = game.Players[owner - 1].HasFigureAtStart(index)
-                                    ? game.Players[owner - 1].Symbol
-                                    : ' ';
-                            }
-
-                            builder.Append("(" + cell + ")");
-                            Console.Write(cell);
-
-                            Console.ForegroundColor = ConsoleColor.White;
-
-                            Console.Write(")");
-                            break;
-                        case Cell.H:
-
-                            Console.ForegroundColor = Colors(owner - 1);
-
-                            cell = '#';
-
-                            if (-1 < owner && owner <= game.Players.Count)
-                            {
-                                cell = game.Players[owner - 1].HasFigureAtHome(index)
-                                    ? game.Players[owner - 1].Symbol
-                                    : '#';
-                            }
-
-                            builder.Append(" " + cell + " ");
-                            Console.Write(" " + cell + " ");
-
-                            Console.ForegroundColor = ConsoleColor.White;
-                            break;
-                        default:
-                            builder.Append("   ");
-                            Console.Write("   ");
-
-                            Console.ForegroundColor = ConsoleColor.White;
-                            break;
-                    }
-                }
-
-                Console.WriteLine();
-                builder.AppendLine();
-            }
-
-            return builder.ToString();
         }
     }
 }

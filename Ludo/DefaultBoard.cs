@@ -61,14 +61,11 @@ namespace Ludo
 
         public override int MaxPlayers() => 4;
         public override int PlayerFigures() => 4;
-        public override ConsoleColor Colors(int index)
-        {
-            return _consoleColors[index];
-        }
+        public override ConsoleColor Colors(int index) => _consoleColors[index];
 
-        protected override int Size() => 40;
-        protected override Cell[,] Map() => _map;
-        protected override int[,] Owners() => _owners;
-        protected override int[,] MapIndex() => _mapIndex;      
+        public override int Size() => 40;
+        public override Cell[,] Map() => _map;
+        public override int[,] Owners() => _owners;
+        public override int[,] MapIndex() => _mapIndex;      
     }
 }

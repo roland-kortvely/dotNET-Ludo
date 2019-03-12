@@ -46,7 +46,6 @@ namespace Ludo
 
         public void Loop(Game game)
         {
-           
         }
 
         public void Render(Game game)
@@ -76,13 +75,109 @@ namespace Ludo
             Console.WriteLine(builder.ToString());
 
             //builder.AppendLine(Board.Render(this));
-            game.Board.Render(game);
+            RenderBoard(game);
         }
 
         public void Reset(Game game)
         {
             //Console.CursorVisible = true;
             Console.ReadKey(true);
+        }
+
+        private void RenderBoard(Game game)
+        {
+            if (game?.Board == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i <= game.Board.Map().GetUpperBound(0); i++)
+            {
+                for (var j = 0; j <= game.Board.Map().GetUpperBound(1); j++)
+                {
+                    var type = game.Board.Map()[i, j];
+                    var owner = game.Board.Owners()[i, j];
+                    var index = game.Board.MapIndex()[i, j];
+
+                    var cell = ' ';
+
+                    switch (type)
+                    {
+                        case Board.Cell.S:
+                        case Board.Cell.R:
+                        case Board.Cell.F:
+
+                            Console.Write("[");
+
+                            if (type == Board.Cell.S)
+                            {
+                                Console.ForegroundColor = game.Board.Colors(owner - 1);
+
+                                cell = '*';
+                            }
+
+                            var figure = game.Board.FigureByPosition(game, index);
+                            if (figure != null)
+                            {
+                                if (figure.State == Figure.States.Playing)
+                                {
+                                    //cell = (char) (figure.Index + 48);
+                                    cell = figure.Player.Symbol;
+
+                                    Console.ForegroundColor = game.Board.Colors(figure.Player.Index);
+                                }
+                            }
+
+                            Console.Write(cell);
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write("]");
+                            break;
+                        case Board.Cell.P:
+                            Console.Write("(");
+
+                            Console.ForegroundColor = game.Board.Colors(owner - 1);
+
+                            if (-1 < owner && owner <= game.Players.Count)
+                            {
+                                cell = game.Players[owner - 1].HasFigureAtStart(index)
+                                    ? game.Players[owner - 1].Symbol
+                                    : ' ';
+                            }
+
+                            Console.Write(cell);
+
+                            Console.ForegroundColor = ConsoleColor.White;
+
+                            Console.Write(")");
+                            break;
+                        case Board.Cell.H:
+
+                            Console.ForegroundColor = game.Board.Colors(owner - 1);
+
+                            cell = '#';
+
+                            if (-1 < owner && owner <= game.Players.Count)
+                            {
+                                cell = game.Players[owner - 1].HasFigureAtHome(index)
+                                    ? game.Players[owner - 1].Symbol
+                                    : '#';
+                            }
+
+                            Console.Write(" " + cell + " ");
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                        default:
+                            Console.Write("   ");
+
+                            Console.ForegroundColor = ConsoleColor.White;
+                            break;
+                    }
+                }
+
+                Console.WriteLine();
+            }
         }
     }
 }
