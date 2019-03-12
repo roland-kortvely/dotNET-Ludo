@@ -1,9 +1,30 @@
 using System.Collections.Generic;
 
-namespace Ludo
+namespace Ludo.Entities
 {
     public class Player
     {
+        public Player(int index, string name, char symbol, int figuresStart, int startPosition,
+            int finalPosition)
+        {
+            Index = index;
+            Symbol = symbol;
+
+            Name = name;
+            FiguresStart = figuresStart;
+
+            FiguresHome = 0;
+
+            Figures = new List<Figure>();
+            for (var i = 0; i < figuresStart; i++) Figures.Add(new Figure(this));
+
+            StartPosition = startPosition;
+            FinalPosition = finalPosition;
+
+            FirstMove = true;
+            ExtraMove = false;
+        }
+
         private int FiguresHome { get; set; }
         private int FiguresStart { get; set; }
 
@@ -19,45 +40,18 @@ namespace Ludo
         public int StartPosition { get; }
         public int FinalPosition { get; }
 
-        public Player(int index, string name, char symbol, int figuresStart, int startPosition,
-            int finalPosition)
+        public bool HasFigureAtStart(int index = -1)
         {
-            Index = index;
-            Symbol = symbol;
-
-            Name = name;
-            FiguresStart = figuresStart;
-
-            FiguresHome = 0;
-
-            Figures = new List<Figure>();
-            for (var i = 0; i < figuresStart; i++)
-            {
-                Figures.Add(new Figure(this));
-            }
-
-            StartPosition = startPosition;
-            FinalPosition = finalPosition;
-
-            FirstMove = true;
-            ExtraMove = false;
+            return FiguresStart >= index + 1;
         }
-
-        public bool HasFigureAtStart(int index = -1) => FiguresStart >= index + 1;
 
         public bool HasFigureAtHome(int index)
         {
             foreach (var figure in Figures)
             {
-                if (figure.State != Figure.States.Home)
-                {
-                    continue;
-                }
+                if (figure.State != Figure.States.Home) continue;
 
-                if (figure.Position == index)
-                {
-                    return true;
-                }
+                if (figure.Position == index) return true;
             }
 
             return false;
@@ -65,20 +59,14 @@ namespace Ludo
 
         public bool PlaceFigure()
         {
-            if (FiguresStart <= 0)
-            {
-                return false;
-            }
+            if (FiguresStart <= 0) return false;
 
             foreach (var figure in Figures)
             {
-                if (figure.State != Figure.States.Start)
-                {
-                    continue;
-                }
+                if (figure.State != Figure.States.Start) continue;
 
                 figure.PlaceAtStart();
-                
+
                 FiguresStart--;
                 return true;
             }
@@ -99,29 +87,21 @@ namespace Ludo
         public bool MovePossible(Game game)
         {
             foreach (var figure in Figures)
-            {
                 switch (figure.State)
                 {
                     case Figure.States.Start:
-                        if (game.Board.PlayerCanStartWithFigure(game, this))
-                        {
-                            return true;
-                        }
+                        if (game.Board.PlayerCanStartWithFigure(game, this)) return true;
 
                         break;
                     case Figure.States.Home:
                     case Figure.States.Playing:
 
-                        if (game.Board.PlayerCanMove(game, figure))
-                        {
-                            return true;
-                        }
+                        if (game.Board.PlayerCanMove(game, figure)) return true;
 
                         break;
                     default:
                         continue;
                 }
-            }
 
             return false;
         }
@@ -129,22 +109,15 @@ namespace Ludo
         public bool Finished()
         {
             foreach (var figure in Figures)
-            {
                 if (figure.State != Figure.States.Home)
-                {
                     return false;
-                }
-            }
 
             return true;
         }
 
         public void Reset()
         {
-            foreach (var figure in Figures)
-            {
-                figure.Reset();
-            }
+            foreach (var figure in Figures) figure.Reset();
 
             FirstMove = true;
             ExtraMove = false;

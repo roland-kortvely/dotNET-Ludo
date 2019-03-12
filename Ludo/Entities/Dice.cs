@@ -1,17 +1,17 @@
 using System;
 
-namespace Ludo
+namespace Ludo.Entities
 {
     public class Dice
     {
-        private static Random Random => new Random();
-
-        public int Value { get; private set; }
-
         public Dice()
         {
             Value = 0;
         }
+
+        private static Random Random => new Random();
+
+        public int Value { get; private set; }
 
         public int Roll()
         {

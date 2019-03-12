@@ -1,4 +1,8 @@
 ﻿using System;
+using Ludo.Boards;
+using Ludo.Entities;
+using Ludo.GameModes;
+using Ludo.UserInterfaces;
 
 namespace Ludo
 {
@@ -7,15 +11,11 @@ namespace Ludo
         private static void Main()
         {
             Console.WriteLine("Press any key to start..");
-            
+
             if (Console.ReadKey(true).Key == ConsoleKey.D)
-            {
                 new Game(new DefaultBoard(), new DebugMode(), new ConsoleUI());
-            }
             else
-            {
                 new Game(new DefaultBoard(), new DefaultMode(), new ConsoleUI());
-            }
         }
     }
 }

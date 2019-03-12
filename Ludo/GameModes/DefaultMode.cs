@@ -1,4 +1,8 @@
-namespace Ludo
+using Ludo.Controllers;
+using Ludo.Entities;
+using Ludo.Interfaces;
+
+namespace Ludo.GameModes
 {
     public class DefaultMode : IGameMode
     {
@@ -16,10 +20,7 @@ namespace Ludo
                 game.RefreshUserInterface();
                 InputController.Roll(game);
 
-                if (game.Dice.Value == 6)
-                {
-                    game.CurrentPlayer.ExtraMove = true;
-                }
+                if (game.Dice.Value == 6) game.CurrentPlayer.ExtraMove = true;
             }
             else
             {
@@ -39,15 +40,11 @@ namespace Ludo
             game.RefreshUserInterface();
             InputController.MovePlayer(game);
 
-            if (!game.CurrentPlayer.ExtraMove)
-            {
-                game.NextPlayer();
-            }
+            if (!game.CurrentPlayer.ExtraMove) game.NextPlayer();
         }
 
         public void Reset(Game game)
         {
-            
         }
     }
 }

@@ -1,4 +1,6 @@
-namespace Ludo
+using Ludo.Entities;
+
+namespace Ludo.Interfaces
 {
     public interface IUserInterface
     {

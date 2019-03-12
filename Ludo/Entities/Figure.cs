@@ -1,4 +1,4 @@
-namespace Ludo
+namespace Ludo.Entities
 {
     public class Figure
     {
@@ -9,15 +9,6 @@ namespace Ludo
             Playing
         }
 
-        public Player Player { get; }
-        public int Position { get; private set; }
-
-        public int AbstractPosition { get; private set; }
-
-        public int Index { get; set; }
-
-        public States State { get; private set; }
-
         public Figure(Player player)
         {
             Player = player;
@@ -27,6 +18,15 @@ namespace Ludo
 
             State = States.Start;
         }
+
+        public Player Player { get; }
+        public int Position { get; private set; }
+
+        public int AbstractPosition { get; private set; }
+
+        public int Index { get; set; }
+
+        public States State { get; private set; }
 
         public void PlaceAtStart()
         {

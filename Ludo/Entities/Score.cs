@@ -1,4 +1,4 @@
-namespace Ludo
+namespace Ludo.Entities
 {
     public class Score
     {

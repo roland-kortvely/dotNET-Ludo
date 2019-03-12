@@ -1,11 +1,10 @@
 using System;
+using Ludo.Entities;
 
-namespace Ludo
+namespace Ludo.Controllers
 {
     public class DebugController
     {
-        private Game Game { get; }
-
         public DebugController(Game game)
         {
             Game = game;
@@ -14,6 +13,8 @@ namespace Ludo
             game.Mode = "| DEBUG";
             game.RefreshUserInterface();
         }
+
+        private Game Game { get; }
 
         public void ReadKey(ConsoleKey key)
         {
@@ -46,13 +47,9 @@ namespace Ludo
                     break;
                 case ConsoleKey.S:
                     if (Game.Board.PlayerCanStartWithFigure(Game, Game.CurrentPlayer))
-                    {
                         Game.CurrentPlayer.PlaceFigure();
-                    }
                     else
-                    {
                         Game.Status = "You can't start with a new figure";
-                    }
                     Game.RefreshUserInterface();
                     break;
                 case ConsoleKey.E:

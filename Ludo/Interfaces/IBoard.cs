@@ -1,6 +1,7 @@
 using System;
+using Ludo.Entities;
 
-namespace Ludo
+namespace Ludo.Interfaces
 {
     public interface IBoard
     {

@@ -1,6 +1,7 @@
 using System;
+using Ludo.Entities;
 
-namespace Ludo
+namespace Ludo.Controllers
 {
     public static class InputController
     {
@@ -8,10 +9,7 @@ namespace Ludo
         {
             var key = Console.ReadKey(true).Key;
 
-            if (key == ConsoleKey.E)
-            {
-                Environment.Exit(1);
-            }
+            if (key == ConsoleKey.E) Environment.Exit(1);
 
             return key;
         }
@@ -40,11 +38,8 @@ namespace Ludo
                     Read();
                     break;
                 }
-                
-                if (status)
-                {
-                    break;
-                }
+
+                if (status) break;
 
                 switch (Read())
                 {
@@ -66,13 +61,9 @@ namespace Ludo
                         continue;
                     case ConsoleKey.S:
                         if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
-                        {
                             status = game.CurrentPlayer.PlaceFigure();
-                        }
                         else
-                        {
                             game.Status = "You can't start with a new figure";
-                        }
 
                         game.RefreshUserInterface();
                         continue;
@@ -93,18 +84,14 @@ namespace Ludo
                     game.RefreshUserInterface();
                     break;
                 }
-                
+
                 switch (Read())
-                {                  
+                {
                     case ConsoleKey.S:
                         if (game.Board.PlayerCanStartWithFigure(game, game.CurrentPlayer))
-                        {
                             game.CurrentPlayer.PlaceFigure();
-                        }
                         else
-                        {
                             game.Status = "You can't start with a new figure";
-                        }
 
                         game.RefreshUserInterface();
                         break;

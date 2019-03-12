@@ -1,7 +1,9 @@
 using System;
 using System.Text;
+using Ludo.Entities;
+using Ludo.Interfaces;
 
-namespace Ludo
+namespace Ludo.UserInterfaces
 {
     public class ConsoleUI : IUserInterface
     {
@@ -17,10 +19,7 @@ namespace Ludo
                 {
                     players = Convert.ToInt32(Console.ReadLine());
 
-                    if (players < 2 || players > game.Board.MaxPlayers())
-                    {
-                        Console.WriteLine("Out of range..");
-                    }
+                    if (players < 2 || players > game.Board.MaxPlayers()) Console.WriteLine("Out of range..");
                 }
                 catch (Exception e)
                 {
@@ -50,10 +49,7 @@ namespace Ludo
 
         public void Render(Game game)
         {
-            if (game.Players.Count == 0)
-            {
-                return;
-            }
+            if (game.Players.Count == 0) return;
 
             Console.Clear();
 
@@ -86,10 +82,7 @@ namespace Ludo
 
         private void RenderBoard(Game game)
         {
-            if (game?.Board == null)
-            {
-                return;
-            }
+            if (game?.Board == null) return;
 
             for (var i = 0; i <= game.Board.Map().GetUpperBound(0); i++)
             {
@@ -118,7 +111,6 @@ namespace Ludo
 
                             var figure = game.Board.FigureByPosition(game, index);
                             if (figure != null)
-                            {
                                 if (figure.State == Figure.States.Playing)
                                 {
                                     //cell = (char) (figure.Index + 48);
@@ -126,7 +118,6 @@ namespace Ludo
 
                                     Console.ForegroundColor = game.Board.Colors(figure.Player.Index);
                                 }
-                            }
 
                             Console.Write(cell);
 
@@ -139,11 +130,9 @@ namespace Ludo
                             Console.ForegroundColor = game.Board.Colors(owner - 1);
 
                             if (-1 < owner && owner <= game.Players.Count)
-                            {
                                 cell = game.Players[owner - 1].HasFigureAtStart(index)
                                     ? game.Players[owner - 1].Symbol
                                     : ' ';
-                            }
 
                             Console.Write(cell);
 
@@ -158,11 +147,9 @@ namespace Ludo
                             cell = '#';
 
                             if (-1 < owner && owner <= game.Players.Count)
-                            {
                                 cell = game.Players[owner - 1].HasFigureAtHome(index)
                                     ? game.Players[owner - 1].Symbol
                                     : '#';
-                            }
 
                             Console.Write(" " + cell + " ");
 

@@ -1,11 +1,33 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
+using Ludo.Interfaces;
+using Ludo.Services;
 
-namespace Ludo
+namespace Ludo.Entities
 {
     public class Game
     {
+        private int _currentPlayer;
+
+        public Game(IBoard board, IGameMode gameMode, IUserInterface userInterface)
+        {
+            Board = board;
+            GameMode = gameMode;
+            UserInterface = userInterface;
+
+            _currentPlayer = 0;
+
+            Players = new List<Player>();
+
+            ScoreService = new ScoreService();
+            RatingService = new RatingService();
+            CommentService = new CommentService();
+
+            Reset();
+
+            Start();
+            Loop();
+        }
+
         public IBoard Board { get; }
         public IGameMode GameMode { get; }
         public IUserInterface UserInterface { get; }
@@ -17,44 +39,16 @@ namespace Ludo
 
         public Player CurrentPlayer => Players[_currentPlayer];
 
-        private int _currentPlayer;
-
         public Dice Dice { get; private set; }
 
         public string Status { get; set; }
         public string Mode { get; set; }
 
-        public Game(IBoard board, IGameMode gameMode, IUserInterface userInterface)
-        {
-            Board = board;
-            GameMode = gameMode;
-            UserInterface = userInterface;
-
-            _currentPlayer = 0;
-
-            Players = new List<Player>();
-            
-            ScoreService = new ScoreService();
-            RatingService = new RatingService();
-            CommentService = new CommentService();
-
-            Reset();
-
-            Start();
-            Loop();
-        }
-
         public bool NewPlayer(string name, char symbol)
         {
-            if (name == null)
-            {
-                return false;
-            }
+            if (name == null) return false;
 
-            if (Players.Count + 1 > Board.MaxPlayers())
-            {
-                return false;
-            }
+            if (Players.Count + 1 > Board.MaxPlayers()) return false;
 
             Players.Add(new Player(Players.Count, name, symbol, Board.PlayerFigures(),
                 Board.StartPosition(Players.Count + 1),
@@ -68,13 +62,9 @@ namespace Ludo
             while (true)
             {
                 if (_currentPlayer < Players.Count - 1)
-                {
                     _currentPlayer++;
-                }
                 else
-                {
                     _currentPlayer = 0;
-                }
 
                 break;
             }
@@ -107,10 +97,7 @@ namespace Ludo
 
             Dice = new Dice();
 
-            foreach (var player in Players)
-            {
-                player.Reset();
-            }
+            foreach (var player in Players) player.Reset();
 
             Status = "Game initialized";
 
@@ -120,12 +107,8 @@ namespace Ludo
         public bool IsGameOver()
         {
             foreach (var player in Players)
-            {
                 if (player.Finished())
-                {
                     return true;
-                }
-            }
 
             return false;
         }

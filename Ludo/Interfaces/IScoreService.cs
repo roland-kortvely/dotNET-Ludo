@@ -1,6 +1,7 @@
 using System.Collections;
+using Ludo.Entities;
 
-namespace Ludo
+namespace Ludo.Interfaces
 {
     public interface IScoreService
     {
