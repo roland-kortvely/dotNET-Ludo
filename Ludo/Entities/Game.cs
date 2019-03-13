@@ -145,23 +145,53 @@ namespace Ludo.Entities
                 UserInterface?.Loop(this);
             }
 
+            GameMode?.Dispose(this);
+            UserInterface?.Reset(this);
 
             Status = CurrentPlayer.Name + " has won! [Press any key]";
 
-            var score = ScoreService.Get(CurrentPlayer.Name);
-            if (score != null)
+            ScoreService.NewScore(CurrentPlayer.Name);
+
+            Console.ReadKey(true);
+
+            //Comment
+            Console.WriteLine("Do you want to add a new Comment? [y|N]");
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
             {
-                score.Points += 10;
-                ScoreService.Save();
-            }
-            else
-            {
-                ScoreService.Add(new Score {Name = CurrentPlayer.Name, Points = 10});
+                try
+                {
+                    Console.CursorVisible = true;
+                    Console.Write("Your comment: ");
+                    CommentService.NewComment(CurrentPlayer.Name, Console.ReadLine());
+                    Console.CursorVisible = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
 
-            GameMode?.Reset(this);
-            UserInterface?.Reset(this);
+            //Rating
+            Console.WriteLine("Do you want to add a new Rating? [y|N]");
+            if (Console.ReadKey(true).Key == ConsoleKey.Y)
+            {
+                try
+                {
+                    Console.CursorVisible = true;
+                    Console.Write("Your rating (0-5): ");
+                    var rating = Convert.ToInt32(Console.ReadLine());
 
+                    Console.Write("Your comment: ");
+                    RatingService.Rate(rating, Console.ReadLine());
+                    Console.CursorVisible = false;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+            
+            Status = "[Press any key]";
             Console.ReadKey(true);
         }
 

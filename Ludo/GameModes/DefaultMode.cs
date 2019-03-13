@@ -51,7 +51,7 @@ namespace Ludo.GameModes
             if (!game.CurrentPlayer.ExtraMove) game.NextPlayer();
         }
 
-        public void Reset(Game game)
+        public void Dispose(Game game)
         {
             GlobalController.Dispose();
         }

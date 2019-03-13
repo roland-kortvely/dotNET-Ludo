@@ -15,7 +15,7 @@ namespace Ludo.Menu
             var top = Game.Instance.ScoreService.GetTop();
             if (top.Count > 0)
             {
-                Console.WriteLine("Top {0} players:", top.Count);
+                Console.WriteLine("Top 3 players:");
                 var i = 1;
                 foreach (Score score in top) Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, score.Name, score.Points);
 

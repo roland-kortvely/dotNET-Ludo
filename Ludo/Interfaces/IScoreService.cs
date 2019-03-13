@@ -15,5 +15,7 @@ namespace Ludo.Interfaces
         void Clear();
 
         void Save();
+
+        void NewScore(string name);
     }
 }

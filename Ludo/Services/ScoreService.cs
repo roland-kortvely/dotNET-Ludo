@@ -53,5 +53,24 @@ namespace Ludo.Services
 
             db.SaveChanges();
         }
+
+        public void NewScore(string name)
+        {
+            if (name == null)
+            {
+                return;
+            }
+
+            var score = Get(name);
+            if (score != null)
+            {
+                score.Points += 10;
+                Save();
+            }
+            else
+            {
+                Add(new Score {Name = name, Points = 10});
+            }
+        }
     }
 }

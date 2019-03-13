@@ -29,7 +29,7 @@ namespace Ludo.GameModes
         {
         }
 
-        public void Reset(Game game)
+        public void Dispose(Game game)
         {
             GlobalController.Dispose();
         }

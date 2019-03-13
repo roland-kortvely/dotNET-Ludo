@@ -6,6 +6,6 @@ namespace Ludo.Interfaces
     {
         void Start(Game game);
         void Loop(Game game);
-        void Reset(Game game);
+        void Dispose(Game game);
     }
 }
