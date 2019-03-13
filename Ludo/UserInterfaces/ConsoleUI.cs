@@ -78,8 +78,6 @@ namespace Ludo.UserInterfaces
 
         public void Reset(Game game)
         {
-            //Console.CursorVisible = true;
-            //Console.ReadKey(true);
         }
 
         private void RenderBoard(Game game)

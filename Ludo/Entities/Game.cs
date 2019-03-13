@@ -1,40 +1,68 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Ludo.Boards;
+using Ludo.Controllers;
 using Ludo.Database;
+using Ludo.GameModes;
 using Ludo.Interfaces;
+using Ludo.Menu;
 using Ludo.Services;
+using Ludo.UserInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ludo.Entities
 {
     public class Game
     {
+        public static Game Instance;
+
         private int _currentPlayer;
 
-        public Game(IBoard board, IGameMode gameMode, IUserInterface userInterface)
+        private Game()
         {
-            Board = board;
-            GameMode = gameMode;
-            UserInterface = userInterface;
-
             DB = new LudoContext();
 
-            ScoreService = new ScoreService(this);
-            RatingService = new RatingService(this);
-            CommentService = new CommentService(this);
+            ScoreService = new ScoreService();
+            RatingService = new RatingService();
+            CommentService = new CommentService();
 
             Reset();
-
-            Start();
-            Loop();
         }
 
-        public DbContext DB { get; }
-        public IBoard Board { get; }
-        public IGameMode GameMode { get; }
-        public IUserInterface UserInterface { get; }
-        public IScoreService ScoreService { get; set; }
-        public IRatingService RatingService { get; set; }
-        public ICommentService CommentService { get; set; }
+        public static void GameInstance()
+        {
+            Instance = new Game();
+
+            GlobalController.Use(new MainMenu());
+
+            while (true)
+            {
+            }
+        }
+
+        public async void Run()
+        {
+            Console.Clear();
+
+            await Task.Factory.StartNew(() =>
+            {
+                Start();
+                Loop();
+                Reset();
+
+                GlobalController.Use(new MainMenu());
+            });
+        }
+
+        public LudoContext DB { get; }
+        public IBoard Board { get; set; }
+        public IGameMode GameMode { private get; set; }
+        public IUserInterface UserInterface { private get; set; }
+        public IScoreService ScoreService { get; }
+        public IRatingService RatingService { get; }
+        public ICommentService CommentService { get; }
 
         public bool PlayerCanStartWithFigure() => Board.PlayerCanStartWithFigure(this);
         public bool PlayerCanMove(Figure figure) => Board.PlayerCanMove(this, figure);
@@ -81,13 +109,13 @@ namespace Ludo.Entities
             Status = CurrentPlayer.Name + "'s turn";
         }
 
-        public void Start()
+        private void Start()
         {
-            GameMode?.Start(this);
             UserInterface?.Start(this);
+            GameMode?.Start(this);
         }
 
-        public void Loop()
+        private void Loop()
         {
             while (!IsGameOver())
             {
@@ -95,9 +123,24 @@ namespace Ludo.Entities
                 UserInterface?.Loop(this);
             }
 
-            Status = CurrentPlayer.Name + " has won!";
 
-            Reset();
+            Status = CurrentPlayer.Name + " has won! [Press any key]";
+
+            var score = ScoreService.Get(CurrentPlayer.Name);
+            if (score != null)
+            {
+                score.Points += 10;
+                ScoreService.Save();
+            }
+            else
+            {
+                ScoreService.Add(new Score {Name = CurrentPlayer.Name, Points = 10});
+            }
+
+            GameMode?.Reset(this);
+            UserInterface?.Reset(this);
+
+            Console.ReadKey(true);
         }
 
         private void Reset()
@@ -106,14 +149,9 @@ namespace Ludo.Entities
 
             Players = new List<Player>();
             Dice = new Dice();
-
-            foreach (var player in Players) player.Reset();
-
-            GameMode?.Reset(this);
-            UserInterface?.Reset(this);
         }
 
-        public bool IsGameOver()
+        private bool IsGameOver()
         {
             foreach (var player in Players)
                 if (player.Finished())

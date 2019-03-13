@@ -1,22 +1,22 @@
 using System;
 using Ludo.Entities;
+using Ludo.Interfaces;
 
 namespace Ludo.Controllers
 {
-    public class DebugController
+    public class DebugController : IController
     {
+        private Game Game { get; }
+
         public DebugController(Game game)
         {
             Game = game;
 
             game.Status = "DEBUG MODE";
             game.Mode = "| DEBUG";
-            game.RefreshUserInterface();
         }
 
-        private Game Game { get; }
-
-        public void ReadKey(ConsoleKey key)
+        public void Process(ConsoleKey key)
         {
             switch (key)
             {
@@ -60,9 +60,6 @@ namespace Ludo.Controllers
                     else
                         Game.Status = "You can't start with a new figure";
                     Game.RefreshUserInterface();
-                    break;
-                case ConsoleKey.E:
-                    Environment.Exit(1);
                     break;
             }
         }

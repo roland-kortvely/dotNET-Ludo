@@ -6,8 +6,16 @@ namespace Ludo.GameModes
 {
     public class DefaultMode : IGameMode
     {
+        private InputController InputController { get; }
+
+        public DefaultMode()
+        {
+            InputController = new InputController();
+        }
+
         public void Start(Game game)
         {
+            GlobalController.Register(InputController);
         }
 
         public void Loop(Game game)
@@ -45,6 +53,7 @@ namespace Ludo.GameModes
 
         public void Reset(Game game)
         {
+            GlobalController.Dispose();
         }
     }
 }

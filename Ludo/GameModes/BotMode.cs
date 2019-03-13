@@ -8,11 +8,19 @@ namespace Ludo.GameModes
     public class BotMode : IGameMode
     {
         private Game _game;
+        private InputController InputController { get; }
+
+        public BotMode()
+        {
+            InputController = new InputController();
+        }
 
         public void Start(Game game)
         {
             _game = game;
             game.Mode = "| AGAINST BOT";
+            
+            GlobalController.Register(InputController);
         }
 
         public void Loop(Game game)
@@ -71,6 +79,7 @@ namespace Ludo.GameModes
 
         public void Reset(Game game)
         {
+            GlobalController.Dispose();
         }
 
         private void WaitAndRender(int sleep = 500)

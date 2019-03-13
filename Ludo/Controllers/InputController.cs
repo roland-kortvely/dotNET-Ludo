@@ -1,31 +1,41 @@
 using System;
 using Ludo.Entities;
+using Ludo.Interfaces;
 
 namespace Ludo.Controllers
 {
-    public static class InputController
+    public class InputController : IController
     {
-        public static ConsoleKey Read()
+        private ConsoleKey _key;
+        private bool _block = true;
+
+        public void Process(ConsoleKey key)
         {
-            var key = Console.ReadKey(true).Key;
-
-            if (key == ConsoleKey.E) Environment.Exit(1);
-
-            return key;
+            _key = key;
+            _block = false;
         }
 
-        public static void Roll(Game game)
+        private ConsoleKey Read()
+        {
+            while (_block)
+            {
+            }
+
+            _block = true;
+            return _key;
+        }
+
+        public void Roll(Game game)
         {
             while (Read() != ConsoleKey.Spacebar)
             {
             }
 
             game.Roll();
-//            game.Status = "You rolled " + game.Dice.Value;
             game.RefreshUserInterface();
         }
 
-        public static void MovePlayer(Game game)
+        public void MovePlayer(Game game)
         {
             var status = false;
             while (true)
@@ -74,7 +84,7 @@ namespace Ludo.Controllers
             }
         }
 
-        public static void PlaceFigure(Game game)
+        public void PlaceFigure(Game game)
         {
             while (true)
             {
