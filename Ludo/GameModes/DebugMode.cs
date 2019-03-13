@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Ludo.Controllers;
 using Ludo.Entities;
 using Ludo.Interfaces;
@@ -8,12 +6,12 @@ namespace Ludo.GameModes
 {
     public class DebugMode : IGameMode
     {
-        private DebugController DebugController { get; }
-
         public DebugMode(Game game)
         {
             DebugController = new DebugController(game);
         }
+
+        private DebugController DebugController { get; }
 
         public void Start(Game game)
         {
@@ -21,9 +19,9 @@ namespace Ludo.GameModes
 
             game.Status = "DEBUG MODE";
             game.Mode = "| DEBUG";
-            
+
             game.RefreshUserInterface();
-            
+
             GlobalController.Register(DebugController);
         }
 

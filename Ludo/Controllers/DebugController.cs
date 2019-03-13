@@ -6,8 +6,6 @@ namespace Ludo.Controllers
 {
     public class DebugController : IController
     {
-        private Game Game { get; }
-
         public DebugController(Game game)
         {
             Game = game;
@@ -16,16 +14,15 @@ namespace Ludo.Controllers
             game.Mode = "| DEBUG";
         }
 
+        private Game Game { get; }
+
         public void Process(ConsoleKey key)
         {
             switch (key)
             {
                 case ConsoleKey.W:
 
-                    foreach (var figure in Game.CurrentPlayer.Figures)
-                    {
-                        figure.Home();
-                    }
+                    foreach (var figure in Game.CurrentPlayer.Figures) figure.Home();
 
                     Game.RefreshUserInterface();
                     break;

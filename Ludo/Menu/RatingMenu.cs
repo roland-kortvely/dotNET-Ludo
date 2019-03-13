@@ -5,16 +5,16 @@ using Ludo.Interfaces;
 
 namespace Ludo.Menu
 {
-    public class ScoreMenu : IMenuItem
+    public class RatingMenu : IMenuItem
     {
         public void Render()
         {
             var i = 1;
-            foreach (Score score in Game.Instance.ScoreService.GetAll())
-                Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, score.Name, score.Points);
+            foreach (Rating rating in Game.Instance.RatingService.GetAll())
+                Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, rating.Content, rating.Stars);
 
             Console.WriteLine();
-            Console.WriteLine("[C]lear score table");
+            Console.WriteLine("[C]lear ratings table");
             Console.WriteLine("[R]efresh");
             Console.WriteLine("[B]ack");
             Console.WriteLine("[E]xit");
@@ -25,11 +25,11 @@ namespace Ludo.Menu
             switch (key)
             {
                 case ConsoleKey.C:
-                    Game.Instance.ScoreService.Clear();
-                    GlobalController.Use(new ScoreMenu());
+                    Game.Instance.RatingService.Clear();
+                    GlobalController.Use(new RatingMenu());
                     break;
                 case ConsoleKey.R:
-                    GlobalController.Use(new ScoreMenu());
+                    GlobalController.Use(new RatingMenu());
                     break;
                 case ConsoleKey.B:
                     GlobalController.Use(new MainMenu());

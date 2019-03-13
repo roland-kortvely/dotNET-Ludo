@@ -6,12 +6,12 @@ namespace Ludo.GameModes
 {
     public class DefaultMode : IGameMode
     {
-        private InputController InputController { get; }
-
         public DefaultMode()
         {
             InputController = new InputController();
         }
+
+        private InputController InputController { get; }
 
         public void Start(Game game)
         {

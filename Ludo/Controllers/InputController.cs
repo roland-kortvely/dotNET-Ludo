@@ -6,8 +6,8 @@ namespace Ludo.Controllers
 {
     public class InputController : IController
     {
-        private ConsoleKey _key;
         private bool _block = true;
+        private ConsoleKey _key;
 
         public void Process(ConsoleKey key)
         {

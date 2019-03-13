@@ -36,28 +36,22 @@ namespace Ludo.Entities
 
         public bool HasFigureAtStart(int index = 0)
         {
-            if (Figures.Count < index)
-            {
-                return false;
-            }
+            if (Figures.Count < index) return false;
 
 
             var figure = Figures[index];
 
-            return (figure.State == Figure.States.Start);
+            return figure.State == Figure.States.Start;
         }
 
         public bool HasFigureAtHome(int index)
         {
-            if (Figures.Count < index)
-            {
-                return false;
-            }
+            if (Figures.Count < index) return false;
 
 
             var figure = Figures[index];
 
-            return (figure.State == Figure.States.Home);
+            return figure.State == Figure.States.Home;
         }
 
         public bool StartWithFigure()

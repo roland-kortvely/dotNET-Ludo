@@ -17,10 +17,7 @@ namespace Ludo.Menu
             {
                 Console.WriteLine("Top {0} players:", top.Count);
                 var i = 1;
-                foreach (Score score in top)
-                {
-                    Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, score.Name, score.Points);
-                }
+                foreach (Score score in top) Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, score.Name, score.Points);
 
                 Console.WriteLine();
             }
@@ -34,6 +31,8 @@ namespace Ludo.Menu
 
             Console.WriteLine("Other options:");
             Console.WriteLine("[S]core");
+            Console.WriteLine("[R]atings");
+            Console.WriteLine("[C]omments");
             Console.WriteLine("[E]xit");
         }
 
@@ -68,6 +67,14 @@ namespace Ludo.Menu
 
                 case ConsoleKey.S:
                     GlobalController.Use(new ScoreMenu());
+                    break;
+
+                case ConsoleKey.R:
+                    GlobalController.Use(new RatingMenu());
+                    break;
+
+                case ConsoleKey.C:
+                    GlobalController.Use(new CommentsMenu());
                     break;
             }
         }

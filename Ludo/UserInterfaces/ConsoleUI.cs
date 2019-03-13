@@ -10,7 +10,7 @@ namespace Ludo.UserInterfaces
         public void Start(Game game)
         {
             Console.CursorVisible = true;
-            
+
             var players = 0;
 
             do
@@ -61,7 +61,8 @@ namespace Ludo.UserInterfaces
 
             builder.AppendLine("----------------------------");
 
-            builder.AppendLine("Use [Space] to roll the dice, [S] to start with a figure and [numpad] to move with them.");
+            builder.AppendLine(
+                "Use [Space] to roll the dice, [S] to start with a figure and [numpad] to move with them.");
 
             builder.Append("Dice: ")
                 .Append(game.Dice.Value.ToString())

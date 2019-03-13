@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Ludo.Entities;
 
@@ -8,8 +7,8 @@ namespace Ludo.Interfaces
     {
         void Add(Score score);
 
-        Score Get(String name);
-        
+        Score Get(string name);
+
         IList GetAll();
         IList GetTop();
 

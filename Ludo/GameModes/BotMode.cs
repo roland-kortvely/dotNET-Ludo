@@ -8,18 +8,19 @@ namespace Ludo.GameModes
     public class BotMode : IGameMode
     {
         private Game _game;
-        private InputController InputController { get; }
 
         public BotMode()
         {
             InputController = new InputController();
         }
 
+        private InputController InputController { get; }
+
         public void Start(Game game)
         {
             _game = game;
             game.Mode = "| AGAINST BOT";
-            
+
             GlobalController.Register(InputController);
         }
 
@@ -64,13 +65,9 @@ namespace Ludo.GameModes
 
                 //--First Move
                 if (game.CurrentPlayer.FirstMove)
-                {
                     BotStart(game);
-                }
                 else
-                {
                     BotTurn(game);
-                }
 
                 // Return to human player
                 game.NextPlayer();
@@ -118,10 +115,7 @@ namespace Ludo.GameModes
 
                 WaitAndRender();
 
-                if (!game.MovePossible())
-                {
-                    return;
-                }
+                if (!game.MovePossible()) return;
 
                 if (game.PlayerCanStartWithFigure())
                 {
@@ -132,20 +126,11 @@ namespace Ludo.GameModes
 
                 foreach (var figure in game.CurrentPlayer.Figures)
                 {
-                    if (figure.State != Figure.States.Playing)
-                    {
-                        continue;
-                    }
+                    if (figure.State != Figure.States.Playing) continue;
 
-                    if (!game.PlayerCanMove(figure))
-                    {
-                        continue;
-                    }
+                    if (!game.PlayerCanMove(figure)) continue;
 
-                    if (game.MovePlayer(figure))
-                    {
-                        break;
-                    }
+                    if (game.MovePlayer(figure)) break;
                 }
             } while (game.Dice.Value == 6);
         }

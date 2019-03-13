@@ -125,10 +125,7 @@ namespace Ludo.Entities
 
         public bool MovePlayer(Game game, Figure figure)
         {
-            if (figure == null)
-            {
-                return false;
-            }
+            if (figure == null) return false;
 
             if (!PlayerCanMove(game, figure))
             {

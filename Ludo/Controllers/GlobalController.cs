@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ludo.Interfaces;
 
@@ -7,13 +6,13 @@ namespace Ludo.Controllers
 {
     public static class GlobalController
     {
-        private static IMenuItem MenuItem { get; set; }
-        private static IController Controller { get; set; }
-
         static GlobalController()
         {
             Listen();
         }
+
+        private static IMenuItem MenuItem { get; set; }
+        private static IController Controller { get; set; }
 
         public static void Register(IController controller)
         {
@@ -59,10 +58,7 @@ namespace Ludo.Controllers
 
         private static void Call(ConsoleKey key)
         {
-            if (key == ConsoleKey.E)
-            {
-                Environment.Exit(0);
-            }
+            if (key == ConsoleKey.E) Environment.Exit(0);
 
             try
             {
