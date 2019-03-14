@@ -109,11 +109,7 @@ namespace Ludo.Entities
             {
                 position = figure.AbstractPosition + game.Dice.Value - Size();
 
-                if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1) return false;
-
-                if (figure.State == Figure.States.Home)
-                    if (figure.Player.HasFigureAtHome(position))
-                        return false;
+                if (figure.Player.HasFigureAtHome(position) || position > MaxPlayers() - 1) return false;      
 
                 return true;
             }

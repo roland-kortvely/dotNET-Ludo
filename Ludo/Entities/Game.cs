@@ -17,8 +17,6 @@ namespace Ludo.Entities
 
         private Game()
         {
-            DB = new LudoContext();
-
             ScoreService = new ScoreService();
             RatingService = new RatingService();
             CommentService = new CommentService();
@@ -26,7 +24,6 @@ namespace Ludo.Entities
             Reset();
         }
 
-        public LudoContext DB { get; }
         public IBoard Board { get; set; }
         public IGameMode GameMode { private get; set; }
         public IUserInterface UserInterface { private get; set; }
@@ -150,7 +147,7 @@ namespace Ludo.Entities
 
             Status = CurrentPlayer.Name + " has won! [Press any key]";
 
-            ScoreService.NewScore(CurrentPlayer.Name);
+            ScoreService.IncreaseScore(CurrentPlayer.Name);
 
             Console.ReadKey(true);
 
@@ -190,8 +187,8 @@ namespace Ludo.Entities
                     Console.WriteLine(e.Message);
                 }
             }
-            
-            Status = "[Press any key]";
+
+            Console.WriteLine("[Press any key]");
             Console.ReadKey(true);
         }
 

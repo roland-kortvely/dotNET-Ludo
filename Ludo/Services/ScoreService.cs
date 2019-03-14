@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Ludo.Database;
 using Ludo.Entities;
 using Ludo.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +11,15 @@ namespace Ludo.Services
     {
         public void Add(Score score)
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             db.Add(score);
             db.SaveChanges();
         }
 
-        public Score Get(string name)
-        {
-            var db = Game.Instance.DB;
-
-            return db.Scores.SingleOrDefault(s => s.Name == name);
-        }
-
         public IList GetTop()
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             return (from s in db.Scores orderby s.Points descending select s)
                 .Take(3)
@@ -34,7 +28,7 @@ namespace Ludo.Services
 
         public IList GetAll()
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             return (from s in db.Scores orderby s.Points descending select s)
                 .ToList();
@@ -42,35 +36,32 @@ namespace Ludo.Services
 
         public void Clear()
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             db.Database.ExecuteSqlCommand("DELETE FROM Scores");
         }
 
-        public void Save()
-        {
-            var db = Game.Instance.DB;
-
-            db.SaveChanges();
-        }
-
-        public void NewScore(string name)
+        public void IncreaseScore(string name)
         {
             if (name == null)
             {
                 return;
             }
+            
+            var db = new LudoContext();
 
-            var score = Get(name);
+            var score = db.Scores.SingleOrDefault(s => s.Name == name);;
             if (score != null)
             {
                 score.Points += 10;
-                Save();
             }
             else
             {
-                Add(new Score {Name = name, Points = 10});
+                db.Add(new Score {Name = name, Points = 10});
             }
+            
+            db.SaveChanges();
+
         }
     }
 }

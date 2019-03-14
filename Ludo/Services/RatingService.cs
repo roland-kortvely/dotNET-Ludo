@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Ludo.Database;
 using Ludo.Entities;
 using Ludo.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ namespace Ludo.Services
     {
         public void Add(Rating rating)
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             db.Add(rating);
             db.SaveChanges();
@@ -18,14 +19,14 @@ namespace Ludo.Services
 
         public void Clear()
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             db.Database.ExecuteSqlCommand("DELETE FROM Ratings");
         }
 
         public IList GetAll()
         {
-            var db = Game.Instance.DB;
+            var db = new LudoContext();
 
             return (from s in db.Ratings orderby s.Id descending select s)
                 .ToList();

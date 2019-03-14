@@ -5,6 +5,7 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RuntimeIdentifiers>win10-x64;</RuntimeIdentifiers>
         <Authors>Roland Körtvely</Authors>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-preview3.19153.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.1.0-preview1-final" />
+      <PackageReference Include="NUnit" Version="3.11.0" />
+      <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     </ItemGroup>
 
 </Project>
