@@ -86,12 +86,8 @@ namespace Ludo.Entities
                         break;
                     case Figure.States.Home:
                     case Figure.States.Playing:
-
                         if (game.Board.PlayerCanMove(game, figure)) return true;
-
                         break;
-                    default:
-                        continue;
                 }
 
             return false;

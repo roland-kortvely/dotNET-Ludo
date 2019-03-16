@@ -22,6 +22,10 @@ namespace Ludo.Menu
                 Console.WriteLine();
             }
 
+            Console.WriteLine("Average rating is {0}", Game.Instance.RatingService.AverageRating());
+            
+            Console.WriteLine();
+
             Console.WriteLine("Start a new Game:");
             Console.WriteLine("[N]ormal");
             Console.WriteLine("[B]ot");

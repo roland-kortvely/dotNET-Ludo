@@ -11,7 +11,15 @@ namespace Ludo.Menu
         {
             var i = 1;
             foreach (Rating rating in Game.Instance.RatingService.GetAll())
-                Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, rating.Content, rating.Stars);
+            {
+                Console.Write("#{0} \t {1,-12} \t ", i++, rating.Content);
+
+                for (var stars = 0; stars < rating.Stars; stars++)
+                {
+                    Console.Write('*');
+                }
+                Console.WriteLine();
+            }
 
             Console.WriteLine();
             Console.WriteLine("[C]lear ratings table");

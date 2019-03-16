@@ -22,6 +22,11 @@ namespace Ludo.Entities
 
         public void Set(int value)
         {
+            if (value < 0 || value > 6)
+            {
+                return;
+            }
+            
             Value = value;
         }
     }

@@ -1,5 +1,6 @@
 using Ludo.Boards;
 using Ludo.Entities;
+using Ludo.Interfaces;
 using NUnit.Framework;
 
 namespace LudoTest
@@ -7,17 +8,23 @@ namespace LudoTest
     public class PlayerTest
     {
         private Game _game;
+        private IBoard _board;
         private Player _player;
+        private Figure _figure;
 
         [SetUp]
         public void Setup()
         {
             _game = Game.GameInstance();
-            _game.Board = new DefaultBoard();
+            _board = _game.Board = new DefaultBoard();
+
+            _game.Reset();
 
             _game.NewPlayer("A", 'A');
 
             _player = _game.CurrentPlayer;
+
+            _figure = _game.CurrentPlayer.Figures[0];
         }
 
         [Test]
@@ -42,6 +49,8 @@ namespace LudoTest
             Assert.AreEqual(true, _player.HasFigureAtStart(1));
             Assert.AreEqual(true, _player.HasFigureAtStart(2));
             Assert.AreEqual(true, _player.HasFigureAtStart(3));
+
+            Assert.AreEqual(false, _player.Finished());
         }
 
         [Test]
@@ -55,12 +64,22 @@ namespace LudoTest
             Assert.AreEqual(Figure.States.Playing, _player.Figures[2].State);
             Assert.AreEqual(true, _player.StartWithFigure());
             Assert.AreEqual(Figure.States.Playing, _player.Figures[3].State);
-         
+
             Assert.AreEqual(false, _player.StartWithFigure());
             Assert.AreEqual(false, _player.HasFigureAtStart(0));
             Assert.AreEqual(false, _player.HasFigureAtStart(1));
             Assert.AreEqual(false, _player.HasFigureAtStart(2));
             Assert.AreEqual(false, _player.HasFigureAtStart(3));
+        }
+
+        [Test]
+        public void TestMovePossible()
+        {
+            _game.Dice.Set(1);
+            Assert.AreEqual(false, _player.MovePossible(_game));
+
+            _game.Dice.Set(6);
+            Assert.AreEqual(true, _player.MovePossible(_game));
         }
     }
 }
