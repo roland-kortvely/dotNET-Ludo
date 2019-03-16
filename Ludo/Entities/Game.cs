@@ -40,10 +40,13 @@ namespace Ludo.Entities
         public string Status { get; set; }
         public string Mode { get; set; }
 
-        public static void GameInstance()
+        public static Game GameInstance()
         {
-            Instance = new Game();
+            return Instance ?? (Instance = new Game());
+        }
 
+        public static void Init()
+        {
             GlobalController.Use(new MainMenu());
 
             while (true)

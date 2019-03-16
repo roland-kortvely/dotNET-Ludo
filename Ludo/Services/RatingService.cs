@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Linq;
 using Ludo.Database;
 using Ludo.Entities;
 using Ludo.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Remotion.Linq.Clauses;
 
 namespace Ludo.Services
 {
@@ -34,7 +36,20 @@ namespace Ludo.Services
 
         public float AverageRating()
         {
-            return 0.0f;
+            var db = new LudoContext();
+
+            var ratings = (from s in db.Ratings select s.Stars).ToList();
+
+            if (ratings.Count == 0)
+            {
+                return 0.0f;
+            }
+
+            var sum = 0.0f;
+
+            ratings.ForEach(r => sum += r);
+
+            return sum / ratings.Count;
         }
 
         public void Rate(int stars, string content)
