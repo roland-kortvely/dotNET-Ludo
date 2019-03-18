@@ -26,29 +26,35 @@
   "frameworks": {
     "netcoreapp2.2": {
       "dependencies": {
+        "Microsoft.AspNetCore.Razor.Design": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
         "Microsoft.EntityFrameworkCore": {
           "target": "Package",
-          "version": "[3.0.0-preview3.19153.1, )"
+          "version": "[2.2.3, )"
         },
         "Microsoft.EntityFrameworkCore.Design": {
           "target": "Package",
-          "version": "[3.0.0-preview3.19153.1, )"
+          "version": "[2.2.3, )"
+        },
+        "Microsoft.EntityFrameworkCore.InMemory": {
+          "target": "Package",
+          "version": "[2.2.3, )"
+        },
+        "Microsoft.EntityFrameworkCore.Relational": {
+          "target": "Package",
+          "version": "[2.2.3, )"
         },
         "Microsoft.EntityFrameworkCore.SqlServer": {
           "target": "Package",
-          "version": "[3.0.0-preview3.19153.1, )"
-        },
-        "Microsoft.EntityFrameworkCore.SqlServer.Design": {
-          "target": "Package",
-          "version": "[2.0.0-preview1-final, )"
+          "version": "[2.2.3, )"
         },
         "Microsoft.EntityFrameworkCore.Tools": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+          "suppressParent": "All",
           "target": "Package",
-          "version": "[3.0.0-preview3.19153.1, )"
-        },
-        "Microsoft.EntityFrameworkCore.Tools.DotNet": {
-          "target": "Package",
-          "version": "[2.1.0-preview1-final, )"
+          "version": "[2.2.3, )"
         },
         "Microsoft.NETCore.App": {
           "suppressParent": "All",
