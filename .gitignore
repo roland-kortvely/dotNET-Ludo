@@ -34,3 +34,7 @@ Ludo/bin/
 *.uml~
 
 LudoTest/bin/
+
+Ludo/obj/
+
+LudoWeb/bin/
