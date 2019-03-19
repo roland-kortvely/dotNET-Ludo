@@ -52,5 +52,19 @@ namespace LudoTest
             _service.NewComment("A", "A");
             Assert.AreEqual(1, _service.GetAll().Count);
         }
+        
+        [Test]
+        public void TestGetAndDelete()
+        {
+            _service.Add(new Comment {Name = "A", Content = "AA"});
+            var comment = (Comment) _service.GetAll()[0];
+            
+            Assert.AreEqual(null, _service.Get(comment.Id + 1)?.Id);
+            Assert.AreEqual(comment.Id, _service.Get(comment.Id)?.Id);
+            
+            _service.Delete(comment.Id);
+            
+            Assert.AreEqual(0, _service.GetAll().Count);
+        }
     }
 }

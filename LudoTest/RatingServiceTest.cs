@@ -70,5 +70,19 @@ namespace LudoTest
             _service.Rate(3, "C");
             Assert.AreEqual(3.0f, _service.AverageRating());
         }
+        
+        [Test]
+        public void TestGetAndDelete()
+        {
+            _service.Add(new Rating {Stars = 2, Content = "A"});
+            var rating = (Rating) _service.GetAll()[0];
+            
+            Assert.AreEqual(null, _service.Get(rating.Id + 1)?.Id);
+            Assert.AreEqual(rating.Id, _service.Get(rating.Id)?.Id);
+            
+            _service.Delete(rating.Id);
+            
+            Assert.AreEqual(0, _service.GetAll().Count);
+        }
     }
 }
