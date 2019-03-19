@@ -1,5 +1,3 @@
-using System;
-
 namespace LudoWeb.Models
 {
     public class ErrorViewModel

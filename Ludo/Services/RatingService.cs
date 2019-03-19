@@ -19,6 +19,43 @@ namespace Ludo.Services
             db.SaveChanges();
         }
 
+        public Rating Get(int id)
+        {
+            var db = new LudoContext();
+
+            return db.Ratings.Find(id);
+        }
+
+        public void Delete(int id)
+        {
+            var db = new LudoContext();
+
+            var entity = db.Ratings.Find(id);
+            if (entity == null)
+            {
+                return;
+            }
+
+            db.Ratings.Remove(entity);
+            db.SaveChanges();
+        }
+
+        public void Update(int id, Rating data)
+        {
+            var db = new LudoContext();
+
+            var entity = db.Ratings.Find(id);
+            if (entity == null)
+            {
+                return;
+            }
+
+            entity.Stars = data.Stars;
+            entity.Content = data.Content;
+
+            db.SaveChanges();
+        }
+
         public void Clear()
         {
             var db = new LudoContext();

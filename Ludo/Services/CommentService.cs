@@ -17,6 +17,43 @@ namespace Ludo.Services
             db.SaveChanges();
         }
 
+        public Comment Get(int id)
+        {
+            var db = new LudoContext();
+
+            return db.Comments.Find(id);
+        }
+
+        public void Delete(int id)
+        {
+            var db = new LudoContext();
+
+            var entity = db.Comments.Find(id);
+            if (entity == null)
+            {
+                return;
+            }
+
+            db.Comments.Remove(entity);
+            db.SaveChanges();
+        }
+
+        public void Update(int id, Comment data)
+        {
+            var db = new LudoContext();
+
+            var entity = db.Comments.Find(id);
+            if (entity == null)
+            {
+                return;
+            }
+
+            entity.Name = data.Name;
+            entity.Content = data.Content;
+
+            db.SaveChanges();
+        }
+
         public void Clear()
         {
             var db = new LudoContext();

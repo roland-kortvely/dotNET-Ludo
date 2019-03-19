@@ -28,13 +28,13 @@ namespace Ludo.Services
         {
             var db = new LudoContext();
 
-            var score = db.Scores.Find(id);
-            if (score == null)
+            var entity = db.Scores.Find(id);
+            if (entity == null)
             {
                 return;
             }
 
-            db.Scores.Remove(score);
+            db.Scores.Remove(entity);
             db.SaveChanges();
         }
 
@@ -42,14 +42,14 @@ namespace Ludo.Services
         {
             var db = new LudoContext();
 
-            var score = db.Scores.Find(id);
-            if (score == null)
+            var entity = db.Scores.Find(id);
+            if (entity == null)
             {
                 return;
             }
 
-            score.Name = data.Name;
-            score.Points = data.Points;
+            entity.Name = data.Name;
+            entity.Points = data.Points;
 
             db.SaveChanges();
         }

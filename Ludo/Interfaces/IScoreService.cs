@@ -9,10 +9,11 @@ namespace Ludo.Interfaces
         Score Get(int id);
         void Delete(int id);
         void Update(int id, Score data);
+        void Clear();
+        
         IList GetAll();
         IList GetTop();
 
-        void Clear();
         void IncreaseScore(string name);
     }
 }
