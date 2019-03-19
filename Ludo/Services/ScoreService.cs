@@ -17,6 +17,43 @@ namespace Ludo.Services
             db.SaveChanges();
         }
 
+        public Score Get(int id)
+        {
+            var db = new LudoContext();
+
+            return db.Scores.Find(id);
+        }
+
+        public void Delete(int id)
+        {
+            var db = new LudoContext();
+
+            var score = db.Scores.Find(id);
+            if (score == null)
+            {
+                return;
+            }
+
+            db.Scores.Remove(score);
+            db.SaveChanges();
+        }
+
+        public void Update(int id, Score data)
+        {
+            var db = new LudoContext();
+
+            var score = db.Scores.Find(id);
+            if (score == null)
+            {
+                return;
+            }
+
+            score.Name = data.Name;
+            score.Points = data.Points;
+
+            db.SaveChanges();
+        }
+
         public IList GetTop()
         {
             var db = new LudoContext();
@@ -47,10 +84,11 @@ namespace Ludo.Services
             {
                 return;
             }
-            
+
             var db = new LudoContext();
 
-            var score = db.Scores.SingleOrDefault(s => s.Name == name);;
+            var score = db.Scores.SingleOrDefault(s => s.Name == name);
+            ;
             if (score != null)
             {
                 score.Points += 10;
@@ -59,9 +97,8 @@ namespace Ludo.Services
             {
                 db.Add(new Score {Name = name, Points = 10});
             }
-            
-            db.SaveChanges();
 
+            db.SaveChanges();
         }
     }
 }

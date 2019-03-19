@@ -70,5 +70,19 @@ namespace LudoTest
             Assert.AreEqual(20, ((Score) scores[0]).Points);
             Assert.AreEqual(10, ((Score) scores[1]).Points);
         }
+
+        [Test]
+        public void TestGetAndDelete()
+        {
+            _service.Add(new Score {Name = "A", Points = 10});
+            var score = (Score) _service.GetAll()[0];
+            
+            Assert.AreEqual(null, _service.Get(score.Id + 1)?.Id);
+            Assert.AreEqual(score.Id, _service.Get(score.Id)?.Id);
+            
+            _service.Delete(score.Id);
+            
+            Assert.AreEqual(0, _service.GetAll().Count);
+        }
     }
 }

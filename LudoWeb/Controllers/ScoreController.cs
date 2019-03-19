@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Ludo.Entities;
 using Ludo.Interfaces;
 using Ludo.Services;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LudoWeb.Controllers
 {
@@ -16,36 +11,39 @@ namespace LudoWeb.Controllers
     {
         private readonly IScoreService _service = new ScoreService();
 
-        // GET: api/<controller>
+        // GET: api/score
         [HttpGet]
         public IEnumerable<Score> Get()
         {
             return (IEnumerable<Score>) _service.GetTop();
         }
 
-        // GET api/<controller>/5
+        // GET api/score/{id}
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Score Get(int id)
         {
-            return "value";
+            return _service.Get(id);
         }
 
-        // POST api/<controller>
+        // POST api/score
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Score score)
         {
+            _service.Add(score);
         }
 
-        // PUT api/<controller>/5
+        // PUT api/score/{id}
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Score data)
         {
+            _service.Update(id, data);
         }
 
-        // DELETE api/<controller>/5
+        // DELETE api/score/{id}
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _service.Delete(id);
         }
     }
 }
