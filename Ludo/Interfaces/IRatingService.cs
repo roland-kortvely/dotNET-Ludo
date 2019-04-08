@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using Ludo.Entities;
 
 namespace Ludo.Interfaces
@@ -11,7 +11,7 @@ namespace Ludo.Interfaces
         void Update(int id, Rating data);
         void Clear();
 
-        IList GetAll();
+        IList<Rating> GetAll();
         float AverageRating();
         void Rate(int stars, string content);
     }

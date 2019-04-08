@@ -4,7 +4,7 @@ using Ludo.Interfaces;
 using Ludo.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LudoWeb.Controllers
+namespace LudoWeb.Controllers.Services
 {
     [Route("api/comment")]
     public class CommentController : Controller
@@ -15,7 +15,7 @@ namespace LudoWeb.Controllers
         [HttpGet]
         public IEnumerable<Comment> Get()
         {
-            return (IEnumerable<Comment>) _service.GetAll();
+            return _service.GetAll();
         }
 
         // GET api/comment/{id}

@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using System.Collections.Generic;
 using Ludo.Entities;
 
 namespace Ludo.Interfaces
@@ -11,8 +10,8 @@ namespace Ludo.Interfaces
         void Delete(int id);
         void Update(int id, Comment data);
         void Clear();
-        
-        IList GetAll();
+
+        IList<Comment> GetAll();
         void NewComment(string name, string content);
     }
 }

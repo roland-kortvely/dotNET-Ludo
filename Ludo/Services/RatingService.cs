@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Ludo.Database;
 using Ludo.Entities;
 using Ludo.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Remotion.Linq.Clauses;
 
 namespace Ludo.Services
 {
@@ -13,80 +11,87 @@ namespace Ludo.Services
     {
         public void Add(Rating rating)
         {
-            var db = new LudoContext();
-
-            db.Add(rating);
-            db.SaveChanges();
+            using (var db = new LudoContext())
+            {
+                db.Add(rating);
+                db.SaveChanges();
+            }
         }
 
         public Rating Get(int id)
         {
-            var db = new LudoContext();
-
-            return db.Ratings.Find(id);
+            using (var db = new LudoContext())
+            {
+                return db.Ratings.Find(id);
+            }
         }
 
         public void Delete(int id)
         {
-            var db = new LudoContext();
-
-            var entity = db.Ratings.Find(id);
-            if (entity == null)
+            using (var db = new LudoContext())
             {
-                return;
-            }
+                var entity = db.Ratings.Find(id);
+                if (entity == null)
+                {
+                    return;
+                }
 
-            db.Ratings.Remove(entity);
-            db.SaveChanges();
+                db.Ratings.Remove(entity);
+                db.SaveChanges();
+            }
         }
 
         public void Update(int id, Rating data)
         {
-            var db = new LudoContext();
-
-            var entity = db.Ratings.Find(id);
-            if (entity == null)
+            using (var db = new LudoContext())
             {
-                return;
+                var entity = db.Ratings.Find(id);
+                if (entity == null)
+                {
+                    return;
+                }
+
+                entity.Stars = data.Stars;
+                entity.Content = data.Content;
+
+                db.SaveChanges();
             }
-
-            entity.Stars = data.Stars;
-            entity.Content = data.Content;
-
-            db.SaveChanges();
         }
 
         public void Clear()
         {
-            var db = new LudoContext();
-
-            db.Database.ExecuteSqlCommand("DELETE FROM Ratings");
+            using (var db = new LudoContext())
+            {
+                db.Database.ExecuteSqlCommand("DELETE FROM Ratings");
+            }
         }
 
-        public IList GetAll()
+        public IList<Rating> GetAll()
         {
-            var db = new LudoContext();
-
-            return (from s in db.Ratings orderby s.Id descending select s)
-                .ToList();
+            using (var db = new LudoContext())
+            {
+                return (from s in db.Ratings orderby s.Id descending select s)
+                    .ToList();
+            }
         }
 
         public float AverageRating()
         {
-            var db = new LudoContext();
-
-            var ratings = (from s in db.Ratings select s.Stars).ToList();
-
-            if (ratings.Count == 0)
+            using (var db = new LudoContext())
             {
-                return 0.0f;
+                var ratings = (from s in db.Ratings select s.Stars).ToList();
+
+                if (ratings.Count == 0)
+                {
+                    return 0.0f;
+                }
+
+                var sum = 0.0f;
+
+                ratings.ForEach(r => sum += r);
+
+                return sum / ratings.Count;
             }
-
-            var sum = 0.0f;
-
-            ratings.ForEach(r => sum += r);
-
-            return sum / ratings.Count;
         }
 
         public void Rate(int stars, string content)

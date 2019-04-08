@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Ludo.Database;
 using Ludo.Entities;
@@ -11,54 +11,59 @@ namespace Ludo.Services
     {
         public void Add(Comment comment)
         {
-            var db = new LudoContext();
-
-            db.Add(comment);
-            db.SaveChanges();
+            using (var db = new LudoContext())
+            {
+                db.Add(comment);
+                db.SaveChanges();
+            }
         }
 
         public Comment Get(int id)
         {
-            var db = new LudoContext();
-
-            return db.Comments.Find(id);
+            using (var db = new LudoContext())
+            {
+                return db.Comments.Find(id);
+            }
         }
 
         public void Delete(int id)
         {
-            var db = new LudoContext();
-
-            var entity = db.Comments.Find(id);
-            if (entity == null)
+            using (var db = new LudoContext())
             {
-                return;
-            }
+                var entity = db.Comments.Find(id);
+                if (entity == null)
+                {
+                    return;
+                }
 
-            db.Comments.Remove(entity);
-            db.SaveChanges();
+                db.Comments.Remove(entity);
+                db.SaveChanges();
+            }
         }
 
         public void Update(int id, Comment data)
         {
-            var db = new LudoContext();
-
-            var entity = db.Comments.Find(id);
-            if (entity == null)
+            using (var db = new LudoContext())
             {
-                return;
+                var entity = db.Comments.Find(id);
+                if (entity == null)
+                {
+                    return;
+                }
+
+                entity.Name = data.Name;
+                entity.Content = data.Content;
+
+                db.SaveChanges();
             }
-
-            entity.Name = data.Name;
-            entity.Content = data.Content;
-
-            db.SaveChanges();
         }
 
         public void Clear()
         {
-            var db = new LudoContext();
-
-            db.Database.ExecuteSqlCommand("DELETE FROM Comments");
+            using (var db = new LudoContext())
+            {
+                db.Database.ExecuteSqlCommand("DELETE FROM Comments");
+            }
         }
 
         public void NewComment(string name, string content)
@@ -80,12 +85,13 @@ namespace Ludo.Services
             });
         }
 
-        public IList GetAll()
+        public IList<Comment> GetAll()
         {
-            var db = new LudoContext();
-
-            return (from s in db.Comments orderby s.Id descending select s)
-                .ToList();
+            using (var db = new LudoContext())
+            {
+                return (from s in db.Comments orderby s.Id descending select s)
+                    .ToList();
+            }
         }
     }
 }

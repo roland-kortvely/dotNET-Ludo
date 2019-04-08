@@ -4,7 +4,7 @@ using Ludo.Interfaces;
 using Ludo.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LudoWeb.Controllers
+namespace LudoWeb.Controllers.Services
 {
     [Route("api/score")]
     public class ScoreController : Controller
@@ -15,7 +15,7 @@ namespace LudoWeb.Controllers
         [HttpGet]
         public IEnumerable<Score> Get()
         {
-            return (IEnumerable<Score>) _service.GetTop();
+            return _service.GetTop();
         }
 
         // GET api/score/{id}

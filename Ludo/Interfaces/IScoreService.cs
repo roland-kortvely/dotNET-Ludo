@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using Ludo.Entities;
 
 namespace Ludo.Interfaces
@@ -11,8 +11,8 @@ namespace Ludo.Interfaces
         void Update(int id, Score data);
         void Clear();
         
-        IList GetAll();
-        IList GetTop();
+        IList<Score> GetAll();
+        IList<Score> GetTop();
 
         void IncreaseScore(string name);
     }
