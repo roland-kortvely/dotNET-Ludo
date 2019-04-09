@@ -52,7 +52,7 @@ namespace LudoWeb.Controllers.Services
         {
             _service.Delete(id);
         }
-        
+
         // GET api/rating/clear
         [HttpGet("clear")]
         public void Clear()
