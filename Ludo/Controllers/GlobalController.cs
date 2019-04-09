@@ -64,7 +64,7 @@ namespace Ludo.Controllers
             {
                 Controller?.Process(key);
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 

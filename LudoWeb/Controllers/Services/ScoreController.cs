@@ -15,6 +15,13 @@ namespace LudoWeb.Controllers.Services
         [HttpGet]
         public IEnumerable<Score> Get()
         {
+            return _service.GetAll();
+        }
+
+        // GET: api/score/top
+        [HttpGet("top")]
+        public IEnumerable<Score> GetTop()
+        {
             return _service.GetTop();
         }
 
@@ -44,6 +51,13 @@ namespace LudoWeb.Controllers.Services
         public void Delete(int id)
         {
             _service.Delete(id);
+        }
+
+        // GET api/score/clear
+        [HttpGet("clear")]
+        public void Clear()
+        {
+            _service.Clear();
         }
     }
 }

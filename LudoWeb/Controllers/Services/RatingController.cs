@@ -18,6 +18,13 @@ namespace LudoWeb.Controllers.Services
             return _service.GetAll();
         }
 
+        // GET api/rating/average
+        [HttpGet("average")]
+        public float GetAverageRating()
+        {
+            return _service.AverageRating();
+        }
+
         // GET api/rating/{id}
         [HttpGet("{id}")]
         public Rating Get(int id)
@@ -44,6 +51,13 @@ namespace LudoWeb.Controllers.Services
         public void Delete(int id)
         {
             _service.Delete(id);
+        }
+        
+        // GET api/rating/clear
+        [HttpGet("clear")]
+        public void Clear()
+        {
+            _service.Clear();
         }
     }
 }
