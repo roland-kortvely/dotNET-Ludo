@@ -88,6 +88,11 @@ let Ludo = {
 
         this.resetBoard();
         this.setupDice();
+
+        //TODO:: API
+        axios.get("/api/game/init").then(function (response) {
+            console.log(response.data.message);
+        });
     },
 
     resetBoard() {
@@ -134,7 +139,10 @@ let Ludo = {
                     });
 
                 //TODO:: API
-                piece.view.addEventListener('click', () => piece.step(this.game.dice.value));
+                piece.view.addEventListener('click', () => {
+                    console.log("Moved with a figure {" + this.game.dice.value + "}");
+                    piece.step(this.game.dice.value)
+                });
 
                 this.overlay.appendChild(piece.view);
                 this.game.pieces.push(piece);
@@ -177,16 +185,22 @@ let Ludo = {
     },
 
     random6() {
-        //TODO:: API
         return 1 + Math.round(Math.random() * 5)
     },
 
     rollDice(game, roll) {
 
         //TODO:: API
-        roll = roll || this.random6();
+        axios.get("/api/game/roll").then(function (response) {
 
-        game.dice.value = roll;
+            console.log(response.data.message);
+            roll = response.data.data.dice;
+
+            game.dice.value = roll;
+
+        }).catch(function (error) {
+            console.log(error);
+        });
 
         Common.setCSS(this.game.dice.selector, {
             left: this.game.defaultPositions.diceCenter,
@@ -263,7 +277,7 @@ class Piece {
                 [xSteps, ySteps] = [ySteps, xSteps.map((x) => (x * -1))];
                 break;
             case 3:
-                [xSteps, ySteps] = [ySteps.map((y) => (y * -1)), xSteps]
+                [xSteps, ySteps] = [ySteps.map((y) => (y * -1)), xSteps];
                 break;
         }
         for (let i = 0; i < stepLoopArray.length; i++) {
@@ -282,10 +296,10 @@ class Piece {
 
     walkTo(from, to) {
         if (from < to) {
-            to = to > 57 ? 57 : to
+            to = to > 57 ? 57 : to;
             from = from < 0 ? 0 : from
         } else {
-            from = from > 57 ? 57 : from
+            from = from > 57 ? 57 : from;
             to = to < 0 ? 0 : to
         }
 

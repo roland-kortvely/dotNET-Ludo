@@ -8,22 +8,18 @@ namespace Ludo.UserInterfaces
     {
         public void Start(Game game)
         {
-            throw new NotImplementedException();
         }
 
         public void Loop(Game game)
         {
-            throw new NotImplementedException();
         }
 
         public void Render(Game game)
         {
-            throw new NotImplementedException();
         }
 
         public void Reset(Game game)
         {
-            throw new NotImplementedException();
         }
     }
 }
