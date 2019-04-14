@@ -4,7 +4,7 @@ using Ludo.Interfaces;
 
 namespace Ludo.UserInterfaces
 {
-    public class WebUI : IUserInterface
+    public class WebUi : IUserInterface
     {
         public void Start(Game game)
         {

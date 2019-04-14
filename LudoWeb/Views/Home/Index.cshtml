@@ -2,41 +2,54 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="game">
 
-</div>
-<div class="components">
-    <div class="default">
-        <div class="board">
-            <img alt="" class="block"
-                 data-1-src="./ludo/boards/default/block-blue.png"
-                 data-2-src="./ludo/boards/default/block-green.png"
-                 data-3-src="./ludo/boards/default/block-yellow.png"
-                 data-4-src="./ludo/boards/default/block-red.png">
-            <img alt="" class="background" src="./ludo/boards/default/board.png">
-            <div class="overlay">
+<div class="container">
+    <div class="col-md-12" style="padding-bottom: 20px">
+        <div class="alert alert-primary" role="alert" id="status">
+        </div>
+        <div class="btn-group" role="group" aria-label="Options">
+            <button type="button" class="btn btn-secondary" id="new_game">New game</button>
+            <button type="button" class="btn btn-secondary" id="kick_all">Kick all</button>
+        </div>
+    </div>
+
+    <div class="col-md-12" style="padding-bottom: 480px">
+        <div class="game">
+        </div>
+        <div class="components">
+            <div class="default">
+                <div class="board">
+                    <img alt="" class="block"
+                         data-1-src="./ludo/boards/default/block-blue.png"
+                         data-2-src="./ludo/boards/default/block-green.png"
+                         data-3-src="./ludo/boards/default/block-yellow.png"
+                         data-4-src="./ludo/boards/default/block-red.png">
+                    <img alt="" class="background" src="./ludo/boards/default/board.png">
+                    <div class="overlay">
+                    </div>
+                </div>
+
+                <div class="pieces">
+                    <img alt="" class="piece" data-src="./ludo/boards/default/piece-blue.png"
+                         data-shrinked-src="./ludo/boards/default/piece-blue-shrinked.png">
+                    <img alt="" class="piece" data-src="./ludo/boards/default/piece-green.png"
+                         data-shrinked-src="./ludo/boards/default/piece-green-shrinked.png">
+                    <img alt="" class="piece" data-src="./ludo/boards/default/piece-yellow.png"
+                         data-shrinked-src="./ludo/boards/default/piece-yellow-shrinked.png">
+                    <img alt="" class="piece" data-src="./ludo/boards/default/piece-red.png"
+                         data-shrinked-src="./ludo/boards/default/piece-red-shrinked.png">
+                </div>
+
+                <img class="dice"
+                     data-face-1-src="./ludo/dice/dice-1.png"
+                     data-face-2-src="./ludo/dice/dice-2.png"
+                     data-face-3-src="./ludo/dice/dice-3.png"
+                     data-face-4-src="./ludo/dice/dice-4.png"
+                     data-face-5-src="./ludo/dice/dice-5.png"
+                     data-face-6-src="./ludo/dice/dice-6.png">
+
             </div>
         </div>
-
-        <div class="pieces">
-            <img alt="" class="piece" data-src="./ludo/boards/default/piece-blue.png"
-                 data-shrinked-src="./ludo/boards/default/piece-blue-shrinked.png">
-            <img alt="" class="piece" data-src="./ludo/boards/default/piece-green.png"
-                 data-shrinked-src="./ludo/boards/default/piece-green-shrinked.png">
-            <img alt="" class="piece" data-src="./ludo/boards/default/piece-yellow.png"
-                 data-shrinked-src="./ludo/boards/default/piece-yellow-shrinked.png">
-            <img alt="" class="piece" data-src="./ludo/boards/default/piece-red.png"
-                 data-shrinked-src="./ludo/boards/default/piece-red-shrinked.png">
-        </div>
-
-        <img class="dice"
-             data-face-1-src="./ludo/dice/dice-1.png"
-             data-face-2-src="./ludo/dice/dice-2.png"
-             data-face-3-src="./ludo/dice/dice-3.png"
-             data-face-4-src="./ludo/dice/dice-4.png"
-             data-face-5-src="./ludo/dice/dice-5.png"
-             data-face-6-src="./ludo/dice/dice-6.png">
-
     </div>
 </div>
 

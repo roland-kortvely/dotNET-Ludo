@@ -9,18 +9,29 @@ namespace LudoWeb.Controllers.Services
     [Route("api/game")]
     public class GameController : Controller
     {
-        private Capsule _capsule = new Capsule {State = true};
+        private Capsule Capsule { get; } = new Capsule();
 
         [HttpGet("init")]
         public Capsule Get()
         {
             Game.GameInstance();
-            
+
             Game.Instance.Board = new WebBoard();
             Game.Instance.GameMode = new WebMode();
-            Game.Instance.UserInterface = new WebUI();
-            
-            return new Capsule {State = true, Message = "Game initialized"};
+            Game.Instance.UserInterface = new WebUi();
+
+            Capsule.Info("New game initialized");
+            Capsule.Set("game", Game.Instance.ToJson());
+
+            return Capsule;
+        }
+
+        [HttpGet("move")]
+        public Capsule Move()
+        {
+            Capsule.Info("Not implemented exception.").Fail();
+
+            return Capsule;
         }
 
         [HttpGet("roll")]
@@ -28,10 +39,10 @@ namespace LudoWeb.Controllers.Services
         {
             Game.Instance.Roll();
 
-            _capsule.Message = "Rolled " + Game.Instance.Dice.Value;
-            _capsule.Data["dice"] = Game.Instance.Dice.Value;
+            Capsule.Info("Rolled " + Game.Instance.Dice.Value);
+            Capsule.Set("dice", Game.Instance.Dice.Value);
 
-            return _capsule;
+            return Capsule;
         }
     }
 }

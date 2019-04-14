@@ -33,6 +33,16 @@ let Common = {
     }
 };
 
+//TODO:: API
+async function api(url) {
+    let result = await axios.get("/api/game/" + url);
+
+    let status = document.querySelector("#status");
+    status.innerHTML = result.data.message;
+
+    return result.data;
+}
+
 let Ludo = {
     context: document.querySelector('.game'),
     game: {
@@ -40,6 +50,7 @@ let Ludo = {
         boardStyle: 'default',
         gameMode: '1-1',
         playersCount: 0,
+        currentPlayer: 0,
         board: '',
         pieces: [],
         pieceTemplates: [],
@@ -82,6 +93,20 @@ let Ludo = {
     },
 
     init() {
+        document.querySelector("#new_game").addEventListener('click', () => {
+            this.init();
+        });
+
+        document.querySelector("#kick_all").addEventListener('click', () => {
+            this.game.pieces.forEach((p) => {
+                p.kick();
+            });
+        });
+
+        this.prepare();
+    },
+
+    prepare() {
         this.unit = this.game.radius / 15;
         this.diceRadius = this.unit * 1.5;
         this.game.defaultPositions.diceCenter = (this.unit * 7.5) - (this.diceRadius / 2);
@@ -90,8 +115,8 @@ let Ludo = {
         this.setupDice();
 
         //TODO:: API
-        axios.get("/api/game/init").then(function (response) {
-            console.log(response.data.message);
+        api("init").then((r) => {
+            console.log(r.data);
         });
     },
 
@@ -138,10 +163,8 @@ let Ludo = {
                         view: this.game.pieceTemplates[playerIndex].cloneNode(false)
                     });
 
-                //TODO:: API
                 piece.view.addEventListener('click', () => {
-                    console.log("Moved with a figure {" + this.game.dice.value + "}");
-                    piece.step(this.game.dice.value)
+                    piece.move(this.game);
                 });
 
                 this.overlay.appendChild(piece.view);
@@ -191,15 +214,9 @@ let Ludo = {
     rollDice(game, roll) {
 
         //TODO:: API
-        axios.get("/api/game/roll").then(function (response) {
-
-            console.log(response.data.message);
-            roll = response.data.data.dice;
-
+        api("roll").then((r) => {
+            roll = r.data.dice;
             game.dice.value = roll;
-
-        }).catch(function (error) {
-            console.log(error);
         });
 
         Common.setCSS(this.game.dice.selector, {
@@ -258,6 +275,7 @@ class Piece {
 
         this.defaultLocation = profile.location;
         this.firstStep = profile.firstStep;
+
         this.reflectView();
         this.createPath();
     }
@@ -352,5 +370,16 @@ class Piece {
     normal() {
         this.shrinked = false;
         this.reflectView();
+    }
+
+    //TODO:: API
+    move(game) {
+        api("move").then((r) => {
+            this.step(game.dice.value)
+        });
+    }
+
+    kick() {
+        this.walkTo(this.pathPointer, 0);
     }
 }

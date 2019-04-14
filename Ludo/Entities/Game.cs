@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ludo.Controllers;
-using Ludo.Database;
 using Ludo.Interfaces;
 using Ludo.Menu;
 using Ludo.Services;
+using Newtonsoft.Json.Linq;
 
 namespace Ludo.Entities
 {
@@ -39,6 +39,14 @@ namespace Ludo.Entities
 
         public string Status { get; set; }
         public string Mode { get; set; }
+
+        public JObject ToJson()
+        {
+            return new JObject
+            {
+                ["currentPlayer"] = _currentPlayer,
+            };
+        }
 
         public static Game GameInstance()
         {
