@@ -1,7 +1,7 @@
 using System;
 using System.Text;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 
 namespace Ludo.UserInterfaces
 {

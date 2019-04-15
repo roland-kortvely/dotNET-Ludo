@@ -1,5 +1,5 @@
 using System;
-using Ludo.Entities;
+using Ludo.Models;
 
 namespace Ludo.Interfaces
 {

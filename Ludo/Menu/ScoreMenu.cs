@@ -1,7 +1,7 @@
 using System;
 using Ludo.Controllers;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 
 namespace Ludo.Menu
 {
@@ -10,7 +10,7 @@ namespace Ludo.Menu
         public void Render()
         {
             var i = 1;
-            foreach (Score score in Game.Instance.ScoreService.GetAll())
+            foreach (var score in Game.Instance.ScoreService.GetAll())
                 Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, score.Name, score.Points);
 
             Console.WriteLine();

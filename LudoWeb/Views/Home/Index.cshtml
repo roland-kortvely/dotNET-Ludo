@@ -1,12 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Game";
 }
 
-
 <div class="container">
+
+    <div class="alert alert-primary" role="alert" id="status"></div>
+    <div class="alert alert-dark" role="alert" id="data"></div>
+
     <div class="col-md-12" style="padding-bottom: 20px">
-        <div class="alert alert-primary" role="alert" id="status">
-        </div>
         <div class="btn-group" role="group" aria-label="Options">
             <button type="button" class="btn btn-secondary" id="new_game">New game</button>
             <button type="button" class="btn btn-secondary" id="kick_all">Kick all</button>
@@ -51,6 +52,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

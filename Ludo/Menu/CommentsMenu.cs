@@ -1,7 +1,7 @@
 using System;
 using Ludo.Controllers;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 
 namespace Ludo.Menu
 {
@@ -10,7 +10,7 @@ namespace Ludo.Menu
         public void Render()
         {
             var i = 1;
-            foreach (Comment comment in Game.Instance.CommentService.GetAll())
+            foreach (var comment in Game.Instance.CommentService.GetAll())
                 Console.WriteLine("#{0} \t {1,-12} \t {2}", i++, comment.Name, comment.Content);
 
             Console.WriteLine();

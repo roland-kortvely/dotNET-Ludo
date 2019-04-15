@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LudoLibrary.Database;
+using LudoLibrary.Interfaces;
+using LudoLibrary.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +34,14 @@ namespace LudoWeb
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDistributedMemoryCache();
+
+            services.AddDbContext<LudoContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("LudoContextConnection"))
+            );
+
+            services.AddTransient<IScoreService, ScoreService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IRatingService, RatingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

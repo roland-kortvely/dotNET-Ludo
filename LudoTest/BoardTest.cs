@@ -1,37 +1,33 @@
 using Ludo.Boards;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 using NUnit.Framework;
 
 namespace LudoTest
 {
     public class BoardTest
     {
-        private Game _game;
         private IBoard _board;
         private Figure _figure;
+        private Game _game;
 
         [SetUp]
         public void Setup()
         {
             _game = Game.GameInstance();
             _board = _game.Board = new DefaultBoard();
-            
+
             _game.Reset();
 
             _game.NewPlayer("A", 'A');
 
             _figure = _game.CurrentPlayer.Figures[0];
-            
         }
 
         [Test]
         public void TestBoardDefaults()
         {
-            for (var i = 0; i < _board.MaxPlayers(); i++)
-            {
-                Assert.AreNotEqual(null, _board.Colors(i));
-            }
+            for (var i = 0; i < _board.MaxPlayers(); i++) Assert.AreNotEqual(null, _board.Colors(i));
         }
 
         [Test]

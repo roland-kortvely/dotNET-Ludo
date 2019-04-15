@@ -1,9 +1,9 @@
 using System;
 using Ludo.Boards;
 using Ludo.Controllers;
-using Ludo.Entities;
 using Ludo.GameModes;
 using Ludo.Interfaces;
+using Ludo.Models;
 using Ludo.UserInterfaces;
 
 namespace Ludo.Menu
@@ -23,7 +23,7 @@ namespace Ludo.Menu
             }
 
             Console.WriteLine("Average rating is {0}", Game.Instance.RatingService.AverageRating());
-            
+
             Console.WriteLine();
 
             Console.WriteLine("Start a new Game:");

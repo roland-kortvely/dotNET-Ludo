@@ -37,20 +37,38 @@ let Common = {
 async function api(url) {
     let result = await axios.get("/api/game/" + url);
 
-    let status = document.querySelector("#status");
-    status.innerHTML = result.data.message;
+    console.log(result.data.message);
+    
+    status(result.data.message);
+    data(result.data.data);
 
-    return result.data;
+    if (result.data.state !== true) {
+        throw Error("Blocked");
+    }
+
+    return result.data.data;
+}
+
+function status(msg) {
+    let status = document.querySelector("#status");
+    status.innerHTML = msg;
+}
+
+function data(d) {
+    let data = document.querySelector("#data");
+    data.innerHTML = JSON.stringify(d);
 }
 
 let Ludo = {
     context: document.querySelector('.game'),
+    data: {
+        currentPlayer: 0,
+    },
     game: {
         radius: 480,
         boardStyle: 'default',
         gameMode: '1-1',
         playersCount: 0,
-        currentPlayer: 0,
         board: '',
         pieces: [],
         pieceTemplates: [],
@@ -116,7 +134,13 @@ let Ludo = {
 
         //TODO:: API
         api("init").then((r) => {
-            console.log(r.data);
+            
+            Object.assign(this.data, r.game);
+            
+            
+            
+        }).catch((e) => {
+            status("Unable to start a new game.");
         });
     },
 
@@ -215,8 +239,10 @@ let Ludo = {
 
         //TODO:: API
         api("roll").then((r) => {
-            roll = r.data.dice;
+            roll = r.dice;
             game.dice.value = roll;
+        }).catch((e) => {
+            status("Unable to roll the dice.");
         });
 
         Common.setCSS(this.game.dice.selector, {
@@ -375,7 +401,9 @@ class Piece {
     //TODO:: API
     move(game) {
         api("move").then((r) => {
-            this.step(game.dice.value)
+            this.step(game.dice.value);
+        }).catch((e) => {
+            status("Unable to move with a figure.");
         });
     }
 

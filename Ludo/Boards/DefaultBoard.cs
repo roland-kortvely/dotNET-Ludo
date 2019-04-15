@@ -1,6 +1,6 @@
 using System;
-using Ludo.Entities;
-using static Ludo.Entities.Board.Cell;
+using Ludo.Models;
+using static Ludo.Models.Board.Cell;
 
 namespace Ludo.Boards
 {

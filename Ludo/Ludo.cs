@@ -1,4 +1,4 @@
-﻿using Ludo.Entities;
+﻿using Ludo.Models;
 
 namespace Ludo
 {

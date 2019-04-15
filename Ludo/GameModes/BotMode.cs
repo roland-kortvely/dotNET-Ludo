@@ -1,7 +1,7 @@
 using System.Threading;
 using Ludo.Controllers;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 
 namespace Ludo.GameModes
 {

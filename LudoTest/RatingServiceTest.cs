@@ -1,6 +1,6 @@
-using Ludo.Entities;
-using Ludo.Interfaces;
-using Ludo.Services;
+using LudoLibrary.Interfaces;
+using LudoLibrary.Models;
+using LudoLibrary.Services;
 using NUnit.Framework;
 
 namespace LudoTest
@@ -34,7 +34,7 @@ namespace LudoTest
 
             Assert.AreEqual(1, _service.GetAll().Count);
 
-            var rating = (Rating) _service.GetAll()[0];
+            var rating = _service.GetAll()[0];
             Assert.AreNotEqual(null, rating.Id);
             Assert.AreEqual("A", rating.Content);
             Assert.AreEqual(2, rating.Stars);
@@ -70,18 +70,18 @@ namespace LudoTest
             _service.Rate(3, "C");
             Assert.AreEqual(3.0f, _service.AverageRating());
         }
-        
+
         [Test]
         public void TestGetAndDelete()
         {
             _service.Add(new Rating {Stars = 2, Content = "A"});
-            var rating = (Rating) _service.GetAll()[0];
-            
+            var rating = _service.GetAll()[0];
+
             Assert.AreEqual(null, _service.Get(rating.Id + 1)?.Id);
             Assert.AreEqual(rating.Id, _service.Get(rating.Id)?.Id);
-            
+
             _service.Delete(rating.Id);
-            
+
             Assert.AreEqual(0, _service.GetAll().Count);
         }
     }

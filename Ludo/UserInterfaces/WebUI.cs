@@ -1,6 +1,5 @@
-using System;
-using Ludo.Entities;
 using Ludo.Interfaces;
+using Ludo.Models;
 
 namespace Ludo.UserInterfaces
 {

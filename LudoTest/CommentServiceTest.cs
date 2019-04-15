@@ -1,6 +1,6 @@
-using Ludo.Entities;
-using Ludo.Interfaces;
-using Ludo.Services;
+using LudoLibrary.Interfaces;
+using LudoLibrary.Models;
+using LudoLibrary.Services;
 using NUnit.Framework;
 
 namespace LudoTest
@@ -34,7 +34,7 @@ namespace LudoTest
 
             Assert.AreEqual(1, _service.GetAll().Count);
 
-            var comment = (Comment) _service.GetAll()[0];
+            var comment = _service.GetAll()[0];
             Assert.AreNotEqual(null, comment.Id);
             Assert.AreEqual("A", comment.Name);
             Assert.AreEqual("AA", comment.Content);
@@ -45,25 +45,25 @@ namespace LudoTest
         {
             _service.NewComment(null, "A");
             Assert.AreEqual(0, _service.GetAll().Count);
-            
+
             _service.NewComment("A", null);
             Assert.AreEqual(0, _service.GetAll().Count);
-            
+
             _service.NewComment("A", "A");
             Assert.AreEqual(1, _service.GetAll().Count);
         }
-        
+
         [Test]
         public void TestGetAndDelete()
         {
             _service.Add(new Comment {Name = "A", Content = "AA"});
-            var comment = (Comment) _service.GetAll()[0];
-            
+            var comment = _service.GetAll()[0];
+
             Assert.AreEqual(null, _service.Get(comment.Id + 1)?.Id);
             Assert.AreEqual(comment.Id, _service.Get(comment.Id)?.Id);
-            
+
             _service.Delete(comment.Id);
-            
+
             Assert.AreEqual(0, _service.GetAll().Count);
         }
     }
