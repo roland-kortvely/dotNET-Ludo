@@ -38,7 +38,7 @@ async function api(url) {
     let result = await axios.get("/api/game/" + url);
 
     console.log(result.data.message);
-    
+
     status(result.data.message);
     data(result.data.data);
 
@@ -59,8 +59,18 @@ function data(d) {
     data.innerHTML = JSON.stringify(d);
 }
 
+function setPlayer(id) {
+    Ludo.sessionPlayer = id;
+}
+
+function setRoom(id) {
+    Ludo.sessionRoom = id;
+}
+
 let Ludo = {
     context: document.querySelector('.game'),
+    sessionPlayer: 0,
+    sessionRoom:0,
     data: {
         currentPlayer: 0,
     },
@@ -134,11 +144,10 @@ let Ludo = {
 
         //TODO:: API
         api("init").then((r) => {
-            
+
             Object.assign(this.data, r.game);
-            
-            
-            
+
+
         }).catch((e) => {
             status("Unable to start a new game.");
         });

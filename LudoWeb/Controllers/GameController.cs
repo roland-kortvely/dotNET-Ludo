@@ -1,8 +1,13 @@
+using System.Linq;
 using Ludo.Boards;
 using Ludo.GameModes;
 using Ludo.Models;
 using Ludo.UserInterfaces;
+using LudoLibrary.Database;
+using LudoLibrary.Interfaces;
 using LudoLibrary.Models;
+using LudoLibrary.Services;
+using LudoWeb.Controllers.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LudoWeb.Controllers
@@ -11,6 +16,19 @@ namespace LudoWeb.Controllers
     public class GameController : Controller
     {
         private Capsule Capsule { get; } = new Capsule();
+
+        private readonly LudoContext _context;
+
+        public GameController(LudoContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("build")]
+        public Capsule Build()
+        {
+            return Capsule;
+        }
 
         [HttpGet("init")]
         public Capsule Get()

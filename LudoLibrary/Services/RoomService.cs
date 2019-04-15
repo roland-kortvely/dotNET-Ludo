@@ -44,12 +44,12 @@ namespace LudoLibrary.Services
 
         public Room Get(int id)
         {
-            throw new NotImplementedException();
+            return _db.Rooms.Find(id);
         }
 
         public IList<Room> GetAll()
         {
-            return (from s in _db.Rooms select s)
+            return (from s in _db.Rooms.Include(r => r.Users).Include(r => r.Commands) select s)
                 .ToList();
         }
     }

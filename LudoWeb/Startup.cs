@@ -1,6 +1,8 @@
 ﻿using LudoLibrary.Database;
 using LudoLibrary.Interfaces;
+using LudoLibrary.Models;
 using LudoLibrary.Services;
+using LudoWeb.Controllers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +41,11 @@ namespace LudoWeb
                 options.UseSqlServer(Configuration.GetConnectionString("LudoContextConnection"))
             );
 
+            
+            services.AddTransient<IService<Room>, RoomService>();
+            services.AddTransient<IService<User>, UserService>();
+            services.AddTransient<IService<Command>, CommandService>();
+            
             services.AddTransient<IScoreService, ScoreService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IRatingService, RatingService>();

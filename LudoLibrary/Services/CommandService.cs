@@ -8,48 +8,48 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LudoLibrary.Services
 {
-    public class UserService : IService<User>
+    public class CommandService : IService<Command>
     {
         private readonly LudoContext _db;
 
-        public UserService(LudoContext db)
+        public CommandService(LudoContext db)
         {
             _db = db;
         }
 
-        public void Add(User entry)
+        public void Add(Command entry)
         {
             _db.Add(entry);
             _db.SaveChanges();
         }
 
-        public void Update(int id, User data)
+        public void Update(int id, Command data)
         {
             throw new NotImplementedException();
         }
 
         public void Delete(int id)
         {
-            var entity = _db.Users.Find(id);
+            var entity = _db.Commands.Find(id);
             if (entity == null) return;
 
-            _db.Users.Remove(entity);
+            _db.Commands.Remove(entity);
             _db.SaveChanges();
         }
 
         public void Clear()
         {
-            _db.Database.ExecuteSqlCommand("DELETE FROM Users");
+            _db.Database.ExecuteSqlCommand("DELETE FROM Commands");
         }
 
-        public User Get(int id)
+        public Command Get(int id)
         {
-            return _db.Users.Find(id);
+            return _db.Commands.Find(id);
         }
 
-        public IList<User> GetAll()
+        public IList<Command> GetAll()
         {
-            return (from s in _db.Users select s)
+            return (from s in _db.Commands select s)
                 .ToList();
         }
     }

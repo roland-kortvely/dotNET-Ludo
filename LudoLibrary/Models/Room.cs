@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LudoLibrary.Models
 {
@@ -6,9 +7,8 @@ namespace LudoLibrary.Models
     public class Room
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
-        public User[] Users { get; set; }
+        public List<User> Users { get; set; } = new List<User>();
+        public List<Command> Commands { get; set; } = new List<Command>();
     }
 }
