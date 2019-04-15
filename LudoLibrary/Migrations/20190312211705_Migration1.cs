@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LudoWeb.Migrations
+namespace LudoLibrary.Migrations
 {
     public partial class Migration1 : Migration
     {
@@ -11,7 +11,7 @@ namespace LudoWeb.Migrations
                 "Comments",
                 table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy",
                             SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
@@ -23,10 +23,10 @@ namespace LudoWeb.Migrations
                 "Ratings",
                 table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy",
                             SqlServerValueGenerationStrategy.IdentityColumn),
-                    Stars = table.Column<int>(nullable: false)
+                    Stars = table.Column<int>()
                 },
                 constraints: table => { table.PrimaryKey("PK_Ratings", x => x.Id); });
 
@@ -34,11 +34,11 @@ namespace LudoWeb.Migrations
                 "Scores",
                 table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("SqlServer:ValueGenerationStrategy",
                             SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    Points = table.Column<int>(nullable: false)
+                    Points = table.Column<int>()
                 },
                 constraints: table => { table.PrimaryKey("PK_Scores", x => x.Id); });
         }

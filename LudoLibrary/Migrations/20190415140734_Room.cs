@@ -1,40 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LudoWeb.Migrations
+namespace LudoLibrary.Migrations
 {
     public partial class Room : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "RoomId",
-                table: "Users",
+                "RoomId",
+                "Users",
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
+                "Rooms",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Rooms", x => x.Id); });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoomId",
-                table: "Users",
-                column: "RoomId");
+                "IX_Users_RoomId",
+                "Users",
+                "RoomId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Users_Rooms_RoomId",
-                table: "Users",
-                column: "RoomId",
-                principalTable: "Rooms",
+                "FK_Users_Rooms_RoomId",
+                "Users",
+                "RoomId",
+                "Rooms",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -42,19 +40,19 @@ namespace LudoWeb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Users_Rooms_RoomId",
-                table: "Users");
+                "FK_Users_Rooms_RoomId",
+                "Users");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                "Rooms");
 
             migrationBuilder.DropIndex(
-                name: "IX_Users_RoomId",
-                table: "Users");
+                "IX_Users_RoomId",
+                "Users");
 
             migrationBuilder.DropColumn(
-                name: "RoomId",
-                table: "Users");
+                "RoomId",
+                "Users");
         }
     }
 }
