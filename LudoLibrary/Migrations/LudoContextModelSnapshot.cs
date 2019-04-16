@@ -122,7 +122,7 @@ namespace LudoLibrary.Migrations
                         .HasForeignKey("RoomId");
 
                     b.HasOne("LudoLibrary.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Commands")
                         .HasForeignKey("UserId");
                 });
 

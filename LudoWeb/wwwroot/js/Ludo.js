@@ -1,22 +1,26 @@
 let Common = {
-    newComponent(componentName) {
+    newComponent(componentName)
+    {
         return document.querySelector('.components').querySelector('.' + componentName).cloneNode(true)
     },
-    getAttribute(node, attributeName) {
+    getAttribute(node, attributeName)
+    {
         if (typeof node.getAttribute === 'function') {
             return node.getAttribute('data-' + attributeName)
         }
         console.error('No getAttribute function exist for', node);
         return node
     },
-    setAttribute(node, attributeName, attributeValue) {
+    setAttribute(node, attributeName, attributeValue)
+    {
         if (typeof node.setAttribute === 'function') {
             return node.setAttribute('data-' + attributeName, attributeValue)
         }
         console.error('No setAttribute function exist for', node);
         return node
     },
-    setCSS(node, properties) {
+    setCSS(node, properties)
+    {
         const pxProperties = ['left', 'top', 'right', 'bottom', 'width', 'height'];
         for (let key in properties) {
             if (pxProperties.indexOf(key) > -1) {
@@ -34,47 +38,79 @@ let Common = {
 };
 
 //TODO:: API
-async function api(url) {
-    let result = await axios.get("/api/game/" + url);
+async function api(url, data = null, prefix = "game/")
+{
+    let $data = JSON.parse(JSON.stringify(data));
 
-    console.log(result.data.message);
+    let $result;
+    if (data === null) {
+        $result = await axios.get("/api/" + prefix + url);
+    } else {
+        $result = await axios.post("/api/" + prefix + url, $data);
+    }
 
-    status(result.data.message);
-    data(result.data.data);
+    if ($result.data.message !== null && $result.data.message.length > 0) {
+        status($result.data.message);
+    }
 
-    if (result.data.state !== true) {
+    // data($result.data.data);
+
+    if ($result.data.state !== true) {
         throw Error("Blocked");
     }
 
-    return result.data.data;
+    return $result.data.data;
 }
 
-function status(msg) {
+function status(msg)
+{
     let status = document.querySelector("#status");
     status.innerHTML = msg;
 }
 
-function data(d) {
+function data(d)
+{
     let data = document.querySelector("#data");
     data.innerHTML = JSON.stringify(d);
 }
 
-function setPlayer(id) {
-    Ludo.sessionPlayer = id;
+function setPlayer(id)
+{
+    Ludo.game.sessionPlayer = id;
 }
 
-function setRoom(id) {
-    Ludo.sessionRoom = id;
+function setRoom(id)
+{
+    Ludo.game.sessionRoom = id;
+}
+
+function parse(game, $r)
+{
+    let $game = game.game;
+
+    if ($r.command === "move") {
+        
+        for (let i = 0; i < $game.pieces.length; i++) {
+            
+            let $piece = $game.pieces[i];
+            
+            if ($piece.pieceIndex === $r.figure && $piece.playerIndex === $r.player) {
+                console.log($piece);
+                $piece.step($r.dice);
+                console.log($r);
+            }
+        }
+    }
 }
 
 let Ludo = {
     context: document.querySelector('.game'),
-    sessionPlayer: 0,
-    sessionRoom:0,
-    data: {
-        currentPlayer: 0,
-    },
     game: {
+        data: {
+            currentPlayer: 0,
+        },
+        sessionPlayer: 0,
+        sessionRoom: 0,
         radius: 480,
         boardStyle: 'default',
         gameMode: '1-1',
@@ -120,9 +156,15 @@ let Ludo = {
         onField: []
     },
 
-    init() {
+    init()
+    {
         document.querySelector("#new_game").addEventListener('click', () => {
-            this.init();
+            api("init").then((r) => {
+                this.reset();
+            }).catch((e) => {
+                console.log(e);
+                status("Unable to start a new game.");
+            });
         });
 
         document.querySelector("#kick_all").addEventListener('click', () => {
@@ -131,29 +173,65 @@ let Ludo = {
             });
         });
 
-        this.prepare();
+        document.querySelector("#player_1").addEventListener('click', () => {
+            setPlayer(0);
+        });
+
+        document.querySelector("#player_2").addEventListener('click', () => {
+            setPlayer(1);
+        });
+
+        setRoom(1);
+
+        this.reset();
+
+        setInterval(() => this.sync(this), 500);
+
+        status("Ready to play.");
     },
 
-    prepare() {
+    reset()
+    {
         this.unit = this.game.radius / 15;
         this.diceRadius = this.unit * 1.5;
         this.game.defaultPositions.diceCenter = (this.unit * 7.5) - (this.diceRadius / 2);
 
         this.resetBoard();
         this.setupDice();
+    },
 
+    sync(game)
+    {
         //TODO:: API
-        api("init").then((r) => {
+        api("info").then((r) => {
 
-            Object.assign(this.data, r.game);
-
+            Object.assign(this.game.data, r.game);
 
         }).catch((e) => {
-            status("Unable to start a new game.");
+            console.log(e);
+            status("Unable to sync a game.");
+        });
+
+        let $opponent = Ludo.game.sessionPlayer === 0 ? 2 : 1;
+
+        //TODO:: API
+        axios.get("/api/game/commands/" + $opponent).then((r) => {
+            let $commands = r.data;
+            if ($commands.length) {
+                $commands.forEach(($command) => {
+                    let $exec = JSON.parse($command.exec);
+                    parse(game, $exec);
+                });
+            }
+            // Object.assign(this.game.commands, $data.commands);
+        }).catch((e) => {
+            console.log(e);
+            status("Unable to sync a game.");
         });
     },
 
-    resetBoard() {
+    resetBoard()
+    {
         this.context.innerHTML = '';
         this.game.board = this.context.appendChild(Common.newComponent(this.game.boardStyle));
 
@@ -225,7 +303,8 @@ let Ludo = {
         });
     },
 
-    setupDice() {
+    setupDice()
+    {
         this.game.dice.selector = this.overlay.appendChild(this.game.board.querySelector('.dice'));
 
         Common.setCSS(this.game.dice.selector, {
@@ -240,17 +319,20 @@ let Ludo = {
         this.game.dice.selector.addEventListener('click', this.rollDice.bind(this, this.game, null));
     },
 
-    random6() {
+    random6()
+    {
         return 1 + Math.round(Math.random() * 5)
     },
 
-    rollDice(game, roll) {
+    rollDice(game, roll)
+    {
 
         //TODO:: API
         api("roll").then((r) => {
             roll = r.dice;
             game.dice.value = roll;
         }).catch((e) => {
+            console.log(e);
             status("Unable to roll the dice.");
         });
 
@@ -276,13 +358,15 @@ let Ludo = {
             })
         }
 
-        function changeFace(anim) {
+        function changeFace(anim)
+        {
             let faceAttr = 'face-' + (1 + Math.round(Math.random() * 5)) + '-src';
             let target = anim.animatables[0].target;
             target.setAttribute('src', Common.getAttribute(target, faceAttr));
         }
 
-        function endFace(anim) {
+        function endFace(anim)
+        {
             let faceAttr = 'face-' + roll + '-src';
             let target = anim.animatables[0].target;
             target.setAttribute('src', Common.getAttribute(target, faceAttr));
@@ -291,7 +375,9 @@ let Ludo = {
 };
 
 class Piece {
-    constructor(profile) {
+
+    constructor(profile)
+    {
 
         Object.assign(this, profile);
 
@@ -315,7 +401,8 @@ class Piece {
         this.createPath();
     }
 
-    createPath() {
+    createPath()
+    {
         this.path = [this.defaultLocation, this.firstStep];
         this.pathPointer = 0;
         let stepLoopArray = [4, 1, 5, 2, 5, 1, 5, 2, 5, 1, 5, 2, 5, 1, 5, 1, 6];
@@ -343,11 +430,13 @@ class Piece {
         }
     }
 
-    get previousStep() {
+    get previousStep()
+    {
         return this.path[this.path.length - 1];
     }
 
-    walkTo(from, to) {
+    walkTo(from, to)
+    {
         if (from < to) {
             to = to > 57 ? 57 : to;
             from = from < 0 ? 0 : from
@@ -382,7 +471,8 @@ class Piece {
         }
     }
 
-    step(n) {
+    step(n)
+    {
         this.walkTo(this.pathPointer, this.pathPointer + n);
         this.pathPointer += n;
         if (this.pathPointer < 0) {
@@ -393,30 +483,46 @@ class Piece {
         }
     }
 
-    reflectView() {
+    reflectView()
+    {
         this.view.setAttribute('src', this.shrinked ? this.size.shrinked : this.size.normal);
     }
 
-    shrink() {
+    shrink()
+    {
         this.shrinked = true;
         this.reflectView();
     }
 
-    normal() {
+    normal()
+    {
         this.shrinked = false;
         this.reflectView();
     }
 
     //TODO:: API
-    move(game) {
-        api("move").then((r) => {
+    move(game)
+    {
+        if (game.sessionPlayer !== this.playerIndex) {
+            status("Unable to move with opponent's figure.");
+            return;
+        }
+
+        if (game.data.currentPlayer !== this.playerIndex) {
+            status("It's not your turn.");
+            return;
+        }
+
+        api("move", {figure: this}).then((r) => {
             this.step(game.dice.value);
         }).catch((e) => {
+            console.log(e);
             status("Unable to move with a figure.");
         });
     }
 
-    kick() {
+    kick()
+    {
         this.walkTo(this.pathPointer, 0);
     }
 }

@@ -29,7 +29,7 @@ namespace LudoLibrary.Database
                 .HasMany(r => r.Commands);
 
             modelBuilder.Entity<Command>()
-                .HasOne(r => r.User);
+                .HasOne(r => r.User).WithMany(u => u.Commands);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

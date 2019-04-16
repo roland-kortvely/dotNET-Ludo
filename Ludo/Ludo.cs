@@ -6,7 +6,7 @@ namespace Ludo
     {
         private static void Main()
         {
-            Game.GameInstance();
+            Game.CreateInstance();
             Game.Init();
         }
     }

@@ -15,7 +15,7 @@ namespace LudoTest
         [SetUp]
         public void Setup()
         {
-            _game = Game.GameInstance();
+            _game = Game.CreateInstance();
             _board = _game.Board = new DefaultBoard();
 
             _game.Reset();

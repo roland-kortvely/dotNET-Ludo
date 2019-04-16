@@ -1,8 +1,11 @@
-﻿using LudoLibrary.Database;
+﻿using Ludo.Boards;
+using Ludo.GameModes;
+using Ludo.Models;
+using Ludo.UserInterfaces;
+using LudoLibrary.Database;
 using LudoLibrary.Interfaces;
 using LudoLibrary.Models;
 using LudoLibrary.Services;
-using LudoWeb.Controllers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +21,18 @@ namespace LudoWeb
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            //TODO:: REMOVE
+            Game.CreateInstance();
+            
+            Game.Instance.Board = new WebBoard();
+            Game.Instance.GameMode = new WebMode();
+            Game.Instance.UserInterface = new WebUi();
+            
+            Game.Instance.Reset();
+
+            Game.Instance.NewPlayer("Player 1", 'A');
+            Game.Instance.NewPlayer("Player 2", 'B');
         }
 
         public IConfiguration Configuration { get; }
@@ -40,7 +55,6 @@ namespace LudoWeb
             services.AddDbContext<LudoContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LudoContextConnection"))
             );
-
             
             services.AddTransient<IService<Room>, RoomService>();
             services.AddTransient<IService<User>, UserService>();

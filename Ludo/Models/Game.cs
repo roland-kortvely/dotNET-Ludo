@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Ludo.Controllers;
 using Ludo.Interfaces;
 using Ludo.Menu;
+using LudoLibrary.Database;
 using LudoLibrary.Interfaces;
+using LudoLibrary.Models;
 using LudoLibrary.Services;
 using Newtonsoft.Json.Linq;
 
@@ -14,14 +16,14 @@ namespace Ludo.Models
     {
         public static Game Instance;
 
-        private int _currentPlayer;
+        public int CurrentPlayerIndex { get; set; }
 
         private Game()
         {
             ScoreService = new ScoreService();
             RatingService = new RatingService();
             CommentService = new CommentService();
-
+            
             Reset();
         }
 
@@ -34,7 +36,7 @@ namespace Ludo.Models
 
         public List<Player> Players { get; private set; }
 
-        public Player CurrentPlayer => Players[_currentPlayer];
+        public Player CurrentPlayer => Players[CurrentPlayerIndex];
 
         public Dice Dice { get; private set; }
 
@@ -45,11 +47,11 @@ namespace Ludo.Models
         {
             return new JObject
             {
-                ["currentPlayer"] = _currentPlayer
+                ["currentPlayer"] = CurrentPlayerIndex
             };
         }
 
-        public static Game GameInstance()
+        public static Game CreateInstance()
         {
             return Instance ?? (Instance = new Game());
         }
@@ -129,10 +131,10 @@ namespace Ludo.Models
         {
             while (true)
             {
-                if (_currentPlayer < Players.Count - 1)
-                    _currentPlayer++;
+                if (CurrentPlayerIndex < Players.Count - 1)
+                    CurrentPlayerIndex++;
                 else
-                    _currentPlayer = 0;
+                    CurrentPlayerIndex = 0;
 
                 break;
             }
@@ -202,7 +204,7 @@ namespace Ludo.Models
 
         public void Reset()
         {
-            _currentPlayer = 0;
+            CurrentPlayerIndex = 0;
 
             Players = new List<Player>();
             Dice = new Dice();
