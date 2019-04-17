@@ -1,3 +1,5 @@
+using System;
+
 namespace Ludo.Models
 {
     public class Figure

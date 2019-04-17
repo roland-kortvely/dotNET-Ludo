@@ -49,7 +49,7 @@ namespace LudoLibrary.Services
 
         public IList<Room> GetAll()
         {
-            return (from s in _db.Rooms.Include(r => r.Users).Include(r => r.Commands) select s)
+            return (from s in _db.Rooms.Include(r => r.Users) select s)
                 .ToList();
         }
     }

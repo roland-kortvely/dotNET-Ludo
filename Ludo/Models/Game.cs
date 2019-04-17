@@ -8,6 +8,7 @@ using LudoLibrary.Database;
 using LudoLibrary.Interfaces;
 using LudoLibrary.Models;
 using LudoLibrary.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Ludo.Models
@@ -23,7 +24,7 @@ namespace Ludo.Models
             ScoreService = new ScoreService();
             RatingService = new RatingService();
             CommentService = new CommentService();
-            
+
             Reset();
         }
 
@@ -45,9 +46,23 @@ namespace Ludo.Models
 
         public JObject ToJson()
         {
+            var l = new List<JObject>();
+            for (var playerIndex = 0; playerIndex < Players.Count; playerIndex++)
+            {
+                var player = Players[playerIndex];
+                var index = playerIndex;
+                l.Add(new JObject
+                {
+                    ["player"] = index,
+                    ["status"] = player.Status
+                });
+            }
+
             return new JObject
             {
-                ["currentPlayer"] = CurrentPlayerIndex
+                ["dice"] = Dice.Value,
+                ["currentPlayer"] = CurrentPlayerIndex,
+                ["players"] = JsonConvert.SerializeObject(l)
             };
         }
 
@@ -84,6 +99,11 @@ namespace Ludo.Models
             return Board.PlayerCanStartWithFigure(this);
         }
 
+        public bool PlayerCanStartWithFigure(Figure figure)
+        {
+            return Board.PlayerCanStartWithFigure(this, figure);
+        }
+
         public bool PlayerCanMove(Figure figure)
         {
             return Board.PlayerCanMove(this, figure);
@@ -99,6 +119,11 @@ namespace Ludo.Models
             return Board.MovePlayer(this, figure);
         }
 
+        public bool FigureKicked(Figure figure)
+        {
+            return Board.FigureKicked(this, figure);
+        }
+
         public bool MovePossible()
         {
             return CurrentPlayer.MovePossible(this);
@@ -107,6 +132,11 @@ namespace Ludo.Models
         public bool StartWithFigure()
         {
             return CurrentPlayer.StartWithFigure();
+        }
+
+        public bool StartWithFigure(Figure figure)
+        {
+            return CurrentPlayer.StartWithFigure(figure);
         }
 
         public void Roll()
@@ -204,10 +234,12 @@ namespace Ludo.Models
 
         public void Reset()
         {
-            CurrentPlayerIndex = 0;
-
             Players = new List<Player>();
             Dice = new Dice();
+
+            Dice.Set(6);
+
+            CurrentPlayerIndex = 0;
         }
 
         private bool IsGameOver()

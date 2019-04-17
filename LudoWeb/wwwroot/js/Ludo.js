@@ -53,10 +53,8 @@ async function api(url, data = null, prefix = "game/")
         status($result.data.message);
     }
 
-    // data($result.data.data);
-
     if ($result.data.state !== true) {
-        throw Error("Blocked");
+        throw Error($result.data.message);
     }
 
     return $result.data.data;
@@ -68,14 +66,14 @@ function status(msg)
     status.innerHTML = msg;
 }
 
-function data(d)
+function diceShake(roll)
 {
-    let data = document.querySelector("#data");
-    data.innerHTML = JSON.stringify(d);
+    Ludo.diceShake(roll);
 }
 
 function setPlayer(id)
 {
+    console.log("Current player: " + id);
     Ludo.game.sessionPlayer = id;
 }
 
@@ -84,31 +82,15 @@ function setRoom(id)
     Ludo.game.sessionRoom = id;
 }
 
-function parse(game, $r)
-{
-    let $game = game.game;
-
-    if ($r.command === "move") {
-        
-        for (let i = 0; i < $game.pieces.length; i++) {
-            
-            let $piece = $game.pieces[i];
-            
-            if ($piece.pieceIndex === $r.figure && $piece.playerIndex === $r.player) {
-                console.log($piece);
-                $piece.step($r.dice);
-                console.log($r);
-            }
-        }
-    }
-}
-
 let Ludo = {
     context: document.querySelector('.game'),
     game: {
         data: {
             currentPlayer: 0,
+            dice: 6,
+            players: []
         },
+        positions: [],
         sessionPlayer: 0,
         sessionRoom: 0,
         radius: 480,
@@ -167,25 +149,12 @@ let Ludo = {
             });
         });
 
-        document.querySelector("#kick_all").addEventListener('click', () => {
-            this.game.pieces.forEach((p) => {
-                p.kick();
-            });
-        });
-
-        document.querySelector("#player_1").addEventListener('click', () => {
-            setPlayer(0);
-        });
-
-        document.querySelector("#player_2").addEventListener('click', () => {
-            setPlayer(1);
-        });
-
+        setPlayer(0);
         setRoom(1);
 
         this.reset();
 
-        setInterval(() => this.sync(this), 500);
+        setInterval(() => this.sync(), 100);
 
         status("Ready to play.");
     },
@@ -200,30 +169,52 @@ let Ludo = {
         this.setupDice();
     },
 
-    sync(game)
+    sync()
     {
-        //TODO:: API
-        api("info").then((r) => {
+        api("sync").then((r) => {
 
             Object.assign(this.game.data, r.game);
+            Object.assign(this.game.positions, JSON.parse(r.sync));
 
-        }).catch((e) => {
-            console.log(e);
-            status("Unable to sync a game.");
-        });
-
-        let $opponent = Ludo.game.sessionPlayer === 0 ? 2 : 1;
-
-        //TODO:: API
-        axios.get("/api/game/commands/" + $opponent).then((r) => {
-            let $commands = r.data;
-            if ($commands.length) {
-                $commands.forEach(($command) => {
-                    let $exec = JSON.parse($command.exec);
-                    parse(game, $exec);
-                });
+            let $dice = this.game.data.dice;
+            if ($dice !== this.game.dice.value) {
+                diceShake($dice);
+                this.game.dice.value = $dice;
             }
-            // Object.assign(this.game.commands, $data.commands);
+
+            let $player = JSON.parse(this.game.data.players)[this.game.sessionPlayer];
+            status($player.status);
+
+            let $figures = this.game.positions;
+            if ($figures.length) {
+
+                for (let i = 0; i < Ludo.game.pieces.length; i++) {
+                    let $piece = Ludo.game.pieces[i];
+                    for (let j = 0; j < $figures.length; j++) {
+
+                        let $figure = $figures[j];
+
+                        if ($piece.playerIndex !== $figure.player) {
+                            continue;
+                        }
+
+                        if ($piece.pieceIndex !== $figure.figure) {
+                            continue;
+                        }
+
+                        // console.log("*:" + $piece.pathPointer + " P:"+$figure.position);
+
+                        let $diff = $figure.position - $piece.pathPointer;
+                        if ($diff !== 0) {
+                            if ($diff > 0) {
+                                $piece.step($diff);
+                            } else {
+                                $piece.walkTo($piece.pathPointer, $figure.position);
+                            }
+                        }
+                    }
+                }
+            }
         }).catch((e) => {
             console.log(e);
             status("Unable to sync a game.");
@@ -326,16 +317,15 @@ let Ludo = {
 
     rollDice(game, roll)
     {
-
-        //TODO:: API
-        api("roll").then((r) => {
+        api("roll", {currentPlayer: this.game.sessionPlayer}).then((r) => {
             roll = r.dice;
-            game.dice.value = roll;
         }).catch((e) => {
             console.log(e);
-            status("Unable to roll the dice.");
         });
+    },
 
+    diceShake(roll)
+    {
         Common.setCSS(this.game.dice.selector, {
             left: this.game.defaultPositions.diceCenter,
             top: this.game.defaultPositions.diceCenter
@@ -500,29 +490,18 @@ class Piece {
         this.reflectView();
     }
 
-    //TODO:: API
     move(game)
     {
-        if (game.sessionPlayer !== this.playerIndex) {
-            status("Unable to move with opponent's figure.");
-            return;
-        }
-
-        if (game.data.currentPlayer !== this.playerIndex) {
-            status("It's not your turn.");
-            return;
-        }
-
-        api("move", {figure: this}).then((r) => {
-            this.step(game.dice.value);
+        api("move", {figure: this, currentPlayer: Ludo.game.sessionPlayer}).then((r) => {
+            this.step(this.pathPointer === 0 ? 1 : game.dice.value);
         }).catch((e) => {
             console.log(e);
-            status("Unable to move with a figure.");
         });
     }
 
     kick()
     {
         this.walkTo(this.pathPointer, 0);
+        this.pathPointer = 0;
     }
 }

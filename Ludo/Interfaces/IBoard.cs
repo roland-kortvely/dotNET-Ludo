@@ -6,8 +6,11 @@ namespace Ludo.Interfaces
     public interface IBoard
     {
         bool PlayerCanStartWithFigure(Game game);
+        bool PlayerCanStartWithFigure(Game game, Figure figure);
         bool PlayerCanMove(Game game, Figure figure);
 
+        bool FigureKicked(Game game, Figure figure);
+        
         bool MovePlayer(Game game, int figureIndex);
         bool MovePlayer(Game game, Figure figure);
 

@@ -9,6 +9,5 @@ namespace LudoLibrary.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public List<User> Users { get; set; } = new List<User>();
-        public List<Command> Commands { get; set; } = new List<Command>();
     }
 }

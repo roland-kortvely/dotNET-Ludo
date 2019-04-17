@@ -5,14 +5,19 @@
 <div class="container">
 
     <div class="alert alert-primary" role="alert" id="status"></div>
-    <div class="alert alert-dark" role="alert" id="data"></div>
 
     <div class="col-md-12" style="padding-bottom: 20px">
         <div class="btn-group" role="group" aria-label="Options">
             <button type="button" class="btn btn-secondary" id="new_game">New game</button>
-            <button type="button" class="btn btn-secondary" id="kick_all">Kick all</button>
-            <button type="button" class="btn btn-secondary" id="player_1">Player 1</button>
-            <button type="button" class="btn btn-secondary" id="player_2">Player 2</button>
+        </div>
+
+        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="select_player">
+            <label class="btn btn-secondary active">
+                <input type="radio" name="player" value="0" autocomplete="off" checked onchange="setPlayer(0)">Player 1
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="player" value="1" autocomplete="off" onchange="setPlayer(1)">Player 2
+            </label>
         </div>
     </div>
 

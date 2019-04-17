@@ -22,6 +22,7 @@ namespace Ludo.Models
             ExtraMove = false;
         }
 
+        public string Status { get; set; } = "Ready to play.";
         public string Name { get; }
         public char Symbol { get; }
         public List<Figure> Figures { get; }
@@ -37,7 +38,6 @@ namespace Ludo.Models
         public bool HasFigureAtStart(int index = 0)
         {
             if (Figures.Count < index) return false;
-
 
             var figure = Figures[index];
 
@@ -65,6 +65,12 @@ namespace Ludo.Models
             }
 
             return false;
+        }
+
+        public bool StartWithFigure(Figure figure)
+        {
+            figure.PlaceAtStart();
+            return true;
         }
 
         public void KickTrigger()

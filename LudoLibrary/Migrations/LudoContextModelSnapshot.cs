@@ -19,27 +19,6 @@ namespace LudoLibrary.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("LudoLibrary.Models.Command", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Exec");
-
-                    b.Property<int?>("RoomId");
-
-                    b.Property<int?>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Commands");
-                });
-
             modelBuilder.Entity("LudoLibrary.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -113,17 +92,6 @@ namespace LudoLibrary.Migrations
                     b.HasIndex("RoomId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("LudoLibrary.Models.Command", b =>
-                {
-                    b.HasOne("LudoLibrary.Models.Room")
-                        .WithMany("Commands")
-                        .HasForeignKey("RoomId");
-
-                    b.HasOne("LudoLibrary.Models.User", "User")
-                        .WithMany("Commands")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("LudoLibrary.Models.User", b =>

@@ -97,6 +97,11 @@ namespace Ludo.Models
             return figure == null || figure.Player != game.CurrentPlayer;
         }
 
+        public bool PlayerCanStartWithFigure(Game game, Figure figure)
+        {
+            return game.Dice.Value == 6;
+        }
+
         public bool PlayerCanMove(Game game, Figure figure)
         {
             if (figure == null) return false;
@@ -117,6 +122,28 @@ namespace Ludo.Models
             var cell = FigureByPosition(game, position);
 
             return cell == null || figure.Player != cell.Player;
+        }
+
+        public bool FigureKicked(Game game, Figure figure)
+        {
+            if (figure == null) return false;
+
+            if (!PlayerCanMove(game, figure))
+            {
+                game.Status = "You can't move with this figure";
+                return false;
+            }
+
+            var position = Transform(figure.Position + game.Dice.Value);
+
+            if (figure.AbstractPosition + game.Dice.Value >= Size() && figure.State != Figure.States.Home)
+            {
+                return false;
+            }
+
+            if (FigureByPosition(game, position) == null || figure.State != Figure.States.Playing) return false;
+
+            return CellTypeByPosition(position) != Cell.S;
         }
 
         public bool MovePlayer(Game game, Figure figure)

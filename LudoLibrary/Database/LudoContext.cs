@@ -18,18 +18,10 @@ namespace LudoLibrary.Database
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<Command> Commands { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Room>()
                 .HasMany(r => r.Users);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(r => r.Commands);
-
-            modelBuilder.Entity<Command>()
-                .HasOne(r => r.User).WithMany(u => u.Commands);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

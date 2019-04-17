@@ -33,6 +33,8 @@ namespace LudoWeb
 
             Game.Instance.NewPlayer("Player 1", 'A');
             Game.Instance.NewPlayer("Player 2", 'B');
+
+            Game.Instance.Players[1].Status = "Waiting for opponents turn.";
         }
 
         public IConfiguration Configuration { get; }
@@ -58,7 +60,6 @@ namespace LudoWeb
             
             services.AddTransient<IService<Room>, RoomService>();
             services.AddTransient<IService<User>, UserService>();
-            services.AddTransient<IService<Command>, CommandService>();
             
             services.AddTransient<IScoreService, ScoreService>();
             services.AddTransient<ICommentService, CommentService>();
