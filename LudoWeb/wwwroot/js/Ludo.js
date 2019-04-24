@@ -154,7 +154,7 @@ let Ludo = {
 
         this.reset();
 
-        setInterval(() => this.sync(), 100);
+        setInterval(() => this.sync(), 500);
 
         status("Ready to play.");
     },

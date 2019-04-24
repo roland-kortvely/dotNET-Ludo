@@ -1,0 +1,101 @@
+@using LudoLibrary.Services
+
+
+@{
+    ViewBag.Title = "Stats";
+    Layout = "_Layout";
+
+    var scoreService = new ScoreService();
+    var scores = scoreService.GetTop();
+
+    var commentService = new CommentService();
+    var comments = commentService.GetAll();
+
+    var ratingService = new RatingService();
+    var ratings = ratingService.GetAll();
+}
+
+<h2>Score List</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Points</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @{
+        foreach (var score in scores)
+        {
+            <tr>
+                <th scope="row">@score.Id</th>
+                <td>@score.Name</td>
+                <td>@score.Points</td>
+            </tr>
+        }
+    }
+
+    </tbody>
+</table>
+
+
+<h2>Rating List</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Stars</th>
+        <th scope="col">Content</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @{
+        foreach (var rating in ratings)
+        {
+            <tr>
+                <th scope="row">@rating.Id</th>
+                <td>
+                    @for (var i = 0; i < rating.Stars; i++)
+                    {
+                        <b>*</b>
+                    }
+                </td>
+                <td>@rating.Content</td>
+            </tr>
+        }
+    }
+
+    </tbody>
+</table>
+
+
+<h2>Comments List</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Content</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @{
+        foreach (var comment in comments)
+        {
+            <tr>
+                <th scope="row">@comment.Id</th>
+                <td>@comment.Name</td>
+                <td>@comment.Content</td>
+            </tr>
+        }
+    }
+
+    </tbody>
+</table>

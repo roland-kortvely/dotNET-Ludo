@@ -147,11 +147,13 @@ namespace LudoWeb.Controllers
             }
             else
             {
+                /*
                 if (!Game.Instance.PlayerCanMove(figure))
                 {
-                    //Capsule.Info("Unable to move with a figure.").Fail();
-                    //return Capsule;
-                }
+                    Game.Instance.CurrentPlayer.Status = "X";
+                    Capsule.Info("Unable to move with a figure.").Fail();
+                    return Capsule;
+                }*/
 
                 if (Game.Instance.FigureKicked(figure))
                 {

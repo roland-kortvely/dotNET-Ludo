@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ludo.Models
 {
@@ -48,10 +49,20 @@ namespace Ludo.Models
         {
             if (Figures.Count < index) return false;
 
+            foreach (var figure in Figures)
+            {
+                if (figure.State != Figure.States.Home)
+                {
+                    continue;
+                }
+                
+                if (figure.Position == index)
+                {
+                    return true;
+                }
+            }
 
-            var figure = Figures[index];
-
-            return figure.State == Figure.States.Home;
+            return false;
         }
 
         public bool StartWithFigure()

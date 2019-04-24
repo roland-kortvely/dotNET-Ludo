@@ -173,7 +173,7 @@ namespace Ludo.Models
             if (cell != null && figure.State == Figure.States.Playing)
                 if (CellTypeByPosition(position) != Cell.S)
                     cell.Kick();
-
+            
             figure.NewPosition(position, game.Dice);
             return true;
         }
