@@ -14,7 +14,7 @@ namespace Ludo.Models
             Name = name;
 
             Figures = new List<Figure>();
-            for (var i = 0; i < figuresStart; i++) Figures.Add(new Figure(this));
+            for (var i = 0; i < figuresStart; i++) Figures.Add(new Figure(this, i));
 
             StartPosition = startPosition;
             FinalPosition = finalPosition;
@@ -36,6 +36,11 @@ namespace Ludo.Models
         public int StartPosition { get; }
         public int FinalPosition { get; }
 
+        public Figure FigureByIndex(int index)
+        {
+            return (from f in Figures where f.Index == index select f).First();
+        }
+
         public bool HasFigureAtStart(int index = 0)
         {
             if (Figures.Count < index) return false;
@@ -55,7 +60,7 @@ namespace Ludo.Models
                 {
                     continue;
                 }
-                
+
                 if (figure.Position == index)
                 {
                     return true;

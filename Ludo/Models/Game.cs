@@ -41,17 +41,17 @@ namespace Ludo.Models
 
         public Dice Dice { get; private set; }
 
-        public string Status { get; set; }
-        public string Mode { get; set; }
+        public string Status { get; set; } = "";
+        public string Mode { get; set; } = "";
 
         public JObject ToJson()
         {
-            var l = new List<JObject>();
+            var players = new JArray();
             for (var playerIndex = 0; playerIndex < Players.Count; playerIndex++)
             {
                 var player = Players[playerIndex];
                 var index = playerIndex;
-                l.Add(new JObject
+                players.Add(new JObject
                 {
                     ["player"] = index,
                     ["status"] = player.Status
@@ -62,7 +62,10 @@ namespace Ludo.Models
             {
                 ["dice"] = Dice.Value,
                 ["currentPlayer"] = CurrentPlayerIndex,
-                ["players"] = JsonConvert.SerializeObject(l)
+                ["players"] = players,
+                ["map"] = Board.ToString(),
+                ["mode"] = GameMode.ToString(),
+                ["interface"] = UserInterface.ToString()
             };
         }
 

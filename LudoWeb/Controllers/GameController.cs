@@ -65,29 +65,30 @@ namespace LudoWeb.Controllers
         }
 
         [HttpGet("sync")]
-        public Capsule Info()
+        public Capsule Sync()
         {
-            var l = new List<JObject>();
+            var sync = new JArray();
 
             for (var playerIndex = 0; playerIndex < Game.Instance.Players.Count; playerIndex++)
             {
                 var player = Game.Instance.Players[playerIndex];
                 var index = playerIndex;
-                l.AddRange(player.Figures.Select((figure, figureIndex) => new JObject
+
+                foreach (var figure in player.Figures)
+                {
+                    sync.Add(new JObject
                     {
                         ["player"] = index,
-                        ["figure"] = figureIndex,
-                        ["position"] = figure.AbstractPosition != 0
-                            ? figure.AbstractPosition + 1
-                            : figure.State == Figure.States.Start
-                                ? 0
-                                : 1
-                    })
-                );
+                        ["index"] = figure.Index,
+                        ["position"] = figure.State != Figure.States.Start ? figure.AbstractPosition + 1 : 0,
+                        ["realPosition"] = figure.Position,
+                        ["state"] = figure.State.ToString()
+                    });
+                }
             }
-
+            
+            Capsule.Set("sync", sync);
             Capsule.Set("game", Game.Instance.ToJson());
-            Capsule.Set("sync", JsonConvert.SerializeObject(l));
 
             return Capsule;
         }
@@ -129,8 +130,9 @@ namespace LudoWeb.Controllers
             }
 
             var player = Game.Instance.Players[playerIndex];
-            var figure = player.Figures[figureIndex];
-          
+//            var figure = player.Figures[figureIndex];
+            var figure = player.FigureByIndex(figureIndex);
+
             if (figure.State == Figure.States.Start)
             {
                 if (!Game.Instance.PlayerCanStartWithFigure(figure))
@@ -169,11 +171,11 @@ namespace LudoWeb.Controllers
             }
 
             Game.Instance.CurrentPlayer.Status = "You moved with a figure.";
-            
+
             Game.Instance.NextPlayer();
 
             Game.Instance.CurrentPlayer.Status = "Roll the dice.";
-            
+
             Capsule.Info("You moved with a figure.");
             return Capsule;
         }

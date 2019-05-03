@@ -11,7 +11,7 @@ namespace Ludo.Models
             Playing
         }
 
-        public Figure(Player player)
+        public Figure(Player player, int index)
         {
             Player = player;
 
@@ -19,6 +19,8 @@ namespace Ludo.Models
             AbstractPosition = 0;
 
             State = States.Start;
+
+            Index = index;
         }
 
         public Player Player { get; }
@@ -46,6 +48,8 @@ namespace Ludo.Models
         public void Kick()
         {
             Position = -1;
+            AbstractPosition = 0;
+            
 
             Player.KickTrigger();
 

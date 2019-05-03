@@ -73,7 +73,7 @@ function diceShake(roll)
 
 function setPlayer(id)
 {
-    console.log("Current player: " + id);
+    // console.log("Current player: " + id);
     Ludo.game.sessionPlayer = id;
 }
 
@@ -174,7 +174,7 @@ let Ludo = {
         api("sync").then((r) => {
 
             Object.assign(this.game.data, r.game);
-            Object.assign(this.game.positions, JSON.parse(r.sync));
+            Object.assign(this.game.positions, r.sync);
 
             let $dice = this.game.data.dice;
             if ($dice !== this.game.dice.value) {
@@ -182,34 +182,32 @@ let Ludo = {
                 this.game.dice.value = $dice;
             }
 
-            let $player = JSON.parse(this.game.data.players)[this.game.sessionPlayer];
+            let $player = this.game.data.players[this.game.sessionPlayer];
             status($player.status);
 
             let $figures = this.game.positions;
             if ($figures.length) {
 
                 for (let i = 0; i < Ludo.game.pieces.length; i++) {
-                    let $piece = Ludo.game.pieces[i];
+                    let $figure = Ludo.game.pieces[i]; 
                     for (let j = 0; j < $figures.length; j++) {
+                        let $syncFigure = $figures[j];  
 
-                        let $figure = $figures[j];
-
-                        if ($piece.playerIndex !== $figure.player) {
+                        if ($figure.playerIndex !== $syncFigure.player) {
                             continue;
                         }
 
-                        if ($piece.pieceIndex !== $figure.figure) {
+                        if ($figure.pieceIndex !== $syncFigure.index) {
                             continue;
                         }
 
-                        // console.log("*:" + $piece.pathPointer + " P:"+$figure.position);
-
-                        let $diff = $figure.position - $piece.pathPointer;
+                        let $diff = $syncFigure.position - $figure.pathPointer;
                         if ($diff !== 0) {
                             if ($diff > 0) {
-                                $piece.step($diff);
+                                $figure.step($diff);
                             } else {
-                                $piece.walkTo($piece.pathPointer, $figure.position);
+                                $figure.walkTo($figure.pathPointer, $syncFigure.position);
+                                $figure.pathPointer = $syncFigure.position;
                             }
                         }
                     }
@@ -494,6 +492,7 @@ class Piece {
     {
         api("move", {figure: this, currentPlayer: Ludo.game.sessionPlayer}).then((r) => {
             this.step(this.pathPointer === 0 ? 1 : game.dice.value);
+            // console.log(this.pieceIndex);
         }).catch((e) => {
             console.log(e);
         });
