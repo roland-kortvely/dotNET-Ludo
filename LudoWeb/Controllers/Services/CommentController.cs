@@ -28,9 +28,10 @@ namespace LudoWeb.Controllers.Services
         }
 
         [HttpPost]
-        public void Post([FromBody] Comment comment)
+        public ActionResult Post([FromForm] Comment comment)
         {
             _service.Add(comment);
+            return Redirect("/Home/Stats");
         }
 
         [HttpPut("{id}")]
@@ -39,10 +40,11 @@ namespace LudoWeb.Controllers.Services
             _service.Update(id, data);
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost("{id}")]
+        public ActionResult Delete(int id)
         {
             _service.Delete(id);
+            return Redirect("/Home/Stats");
         }
 
         [HttpGet("clear")]

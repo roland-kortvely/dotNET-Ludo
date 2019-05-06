@@ -26,7 +26,7 @@ namespace LudoWeb.Controllers.Services
         {
             return _service.AverageRating();
         }
-
+        
         [HttpGet("{id}")]
         public Rating Get(int id)
         {
@@ -34,9 +34,10 @@ namespace LudoWeb.Controllers.Services
         }
 
         [HttpPost]
-        public void Post([FromBody] Rating rating)
+        public ActionResult Post([FromForm] Rating rating)
         {
             _service.Add(rating);
+            return Redirect("/Home/Stats");
         }
 
         [HttpPut("{id}")]
@@ -45,10 +46,11 @@ namespace LudoWeb.Controllers.Services
             _service.Update(id, data);
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPost("{id}")]
+        public ActionResult Delete(int id)
         {
             _service.Delete(id);
+            return Redirect("/Home/Stats");
         }
 
         [HttpGet("clear")]
